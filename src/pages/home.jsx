@@ -5,6 +5,7 @@ function Home({ onNavigate, route }) {
   const [scrolled, setScrolled] = useState(false);
   const [activeMember, setActiveMember] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState('Board of Directors');
+  const [activeService, setActiveService] = useState(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 10);
@@ -17,6 +18,10 @@ function Home({ onNavigate, route }) {
 
   const toggleMember = (index) => {
     setActiveMember(activeMember === index ? null : index);
+  };
+
+  const toggleServiceDetails = (index) => {
+    setActiveService(activeService === index ? null : index);
   };
 
   const handleDownloadCV = (cvPath, e) => {
@@ -404,16 +409,50 @@ function Home({ onNavigate, route }) {
     return teamMembers.filter(member => member.category === selectedCategory);
   };
 
+  // News and Events Data
+  const newsEvents = [
+    {
+      id: 1,
+      title: 'Gunee Bangladesh Launches New Training Program for Women Entrepreneurs',
+      date: 'June 15, 2026',
+      category: 'Event',
+      image: '/images/news1.jpg',
+      excerpt: 'A new capacity building initiative aimed at empowering women entrepreneurs across Bangladesh with essential business and leadership skills.',
+      link: '#'
+    },
+    {
+      id: 2,
+      title: 'Research Report on Financial Inclusion Published',
+      date: 'June 10, 2026',
+      category: 'Publication',
+      image: '/images/news2.jpg',
+      excerpt: 'Our team has released a comprehensive study on gender gap in financial inclusion, highlighting key challenges and recommendations for policy reform.',
+      link: '#'
+    },
+    {
+      id: 3,
+      title: 'Gunee Bangladesh Signs MOU with Leading Development Organization',
+      date: 'June 5, 2026',
+      category: 'Partnership',
+      image: '/images/news3.jpg',
+      excerpt: 'Strategic partnership agreement signed to collaborate on sustainable development projects focusing on gender equity and economic empowerment.',
+      link: '#'
+    }
+  ];
+
   return (
     <>
       {/* Hero Section with Background */}
       <section className="hero-section">
-        {/* Background Image - Fixed */}
+        {/* Background Video - Fixed */}
         <div className="hero-bg-container">
-          <img 
-            src="/images/bg - copy.jpeg" 
-            alt="Gunee Bangladesh Background"
+          <video 
+            src="/images/bg.mp4" 
             className="hero-bg-image"
+            autoPlay
+            loop
+            muted
+            playsInline
           />
         </div>
         
@@ -425,7 +464,7 @@ function Home({ onNavigate, route }) {
           <a href="#hero" className="logo-wrap">
             <div className="logo-icon">
               <img 
-                src="/images/logo.png" 
+                src="/images/logo1.png" 
                 alt="Gunee Bangladesh Logo"
                 className="logo-img"
               />
@@ -445,7 +484,7 @@ function Home({ onNavigate, route }) {
             <div className="card-wrapper">
               <div className="card-image-wrapper">
                 <img 
-                  src="/images/research.png" 
+                  src="/images/research1.png" 
                   alt="Research"
                   className="card-image"
                 />
@@ -458,7 +497,7 @@ function Home({ onNavigate, route }) {
             <div className="card-wrapper">
               <div className="card-image-wrapper">
                 <img 
-                  src="/images/training.png" 
+                  src="/images/training1.png" 
                   alt="Training"
                   className="card-image"
                 />
@@ -471,7 +510,7 @@ function Home({ onNavigate, route }) {
             <div className="card-wrapper">
               <div className="card-image-wrapper">
                 <img 
-                  src="/images/cons.png" 
+                  src="/images/cons1.png" 
                   alt="Consulting"
                   className="card-image"
                 />
@@ -482,7 +521,6 @@ function Home({ onNavigate, route }) {
             </div>
           </div>
         </div>
-        
       </section>
 
       {/* Born from Excellence. Built for Impact Section */}
@@ -512,58 +550,73 @@ function Home({ onNavigate, route }) {
 
           <div className="focus-grid">
             <div className="focus-card">
-              <div className="focus-icon-wrapper">
-                <span className="focus-icon">⚖️</span>
+              <div className="focus-image-wrapper">
+                <img 
+                  src="/images/gender.png" 
+                  alt="Gender & Social Equity"
+                  className="focus-card-image"
+                />
               </div>
               <h3 className="focus-card-title">Gender &amp;<br />Social Equity</h3>
               <p className="focus-card-description">
                 Promoting equality and social justice through inclusive policies and programs
               </p>
-              <div className="focus-card-number">01</div>
             </div>
 
             <div className="focus-card">
-              <div className="focus-icon-wrapper">
-                <span className="focus-icon">📈</span>
+              <div className="focus-image-wrapper">
+                <img 
+                  src="/images/economic.jpg" 
+                  alt="Economics & Finance"
+                  className="focus-card-image"
+                />
               </div>
               <h3 className="focus-card-title">Economics &amp;<br />Finance</h3>
               <p className="focus-card-description">
                 Driving economic growth and financial inclusion through strategic solutions
               </p>
-              <div className="focus-card-number">02</div>
             </div>
 
             <div className="focus-card">
-              <div className="focus-icon-wrapper">
-                <span className="focus-icon">⚙️</span>
+              <div className="focus-image-wrapper">
+                <img 
+                  src="/images/engineer.jpg" 
+                  alt="Engineering & Technology"
+                  className="focus-card-image"
+                />
               </div>
               <h3 className="focus-card-title">Engineering &amp;<br />Technology</h3>
               <p className="focus-card-description">
                 Leveraging innovation and technical expertise for sustainable development
               </p>
-              <div className="focus-card-number">03</div>
             </div>
 
             <div className="focus-card">
-              <div className="focus-icon-wrapper">
-                <span className="focus-icon">📡</span>
+              <div className="focus-image-wrapper">
+                <img 
+                  src="/images/media.jpg" 
+                  alt="Media & Communication"
+                  className="focus-card-image"
+                />
               </div>
               <h3 className="focus-card-title">Media &amp;<br />Communication</h3>
               <p className="focus-card-description">
                 Amplifying voices and shaping narratives through strategic communication
               </p>
-              <div className="focus-card-number">04</div>
             </div>
 
             <div className="focus-card">
-              <div className="focus-icon-wrapper">
-                <span className="focus-icon">🌿</span>
+              <div className="focus-image-wrapper">
+                <img 
+                  src="/images/environment.jpg" 
+                  alt="Environment & Sustainability"
+                  className="focus-card-image"
+                />
               </div>
               <h3 className="focus-card-title">Environment &amp;<br />Sustainability</h3>
               <p className="focus-card-description">
                 Building a greener future through environmental stewardship and sustainable practices
               </p>
-              <div className="focus-card-number">05</div>
             </div>
           </div>
         </div>
@@ -580,134 +633,182 @@ function Home({ onNavigate, route }) {
           </div>
 
           <div className="services-grid">
-            <div className="service-category">
-              <div className="service-category-header">
-                <div className="service-category-icon">🔬</div>
-                <h3 className="service-category-title">Research</h3>
+            {/* Research Service */}
+            <div className="service-category research">
+              <div className="service-card">
+                <div className="service-image-wrapper">
+                  <img src="/images/research2.jpg" alt="Research" className="service-image" />
+                </div>
+                <div className="service-content">
+                  <div className="service-category-header">
+                    <h3 className="service-category-title">Research</h3>
+                    <p className="service-short-desc">Data-driven insights for informed decision-making</p>
+                  </div>
+                  <div className={`service-details ${activeService === 0 ? 'active' : ''}`}>
+                    <ul className="service-list">
+                      <li className="service-item">
+                        <span className="service-dot"></span>
+                        <span className="service-text">Policy Research & Analysis</span>
+                      </li>
+                      <li className="service-item">
+                        <span className="service-dot"></span>
+                        <span className="service-text">Socio-Economic Surveys</span>
+                      </li>
+                      <li className="service-item">
+                        <span className="service-dot"></span>
+                        <span className="service-text">Gender & Equity Studies</span>
+                      </li>
+                      <li className="service-item">
+                        <span className="service-dot"></span>
+                        <span className="service-text">Environmental Impact Assessments</span>
+                      </li>
+                      <li className="service-item">
+                        <span className="service-dot"></span>
+                        <span className="service-text">Data Analytics & Insights</span>
+                      </li>
+                      <li className="service-item">
+                        <span className="service-dot"></span>
+                        <span className="service-text">Market Research & Feasibility Studies</span>
+                      </li>
+                      <li className="service-item">
+                        <span className="service-dot"></span>
+                        <span className="service-text">Public Policy Evaluation</span>
+                      </li>
+                      <li className="service-item">
+                        <span className="service-dot"></span>
+                        <span className="service-text">Qualitative & Quantitative Research</span>
+                      </li>
+                      <li className="service-item">
+                        <span className="service-dot"></span>
+                        <span className="service-text">Baseline & Endline Studies</span>
+                      </li>
+                      <li className="service-item">
+                        <span className="service-dot"></span>
+                        <span className="service-text">Research Capacity Building</span>
+                      </li>
+                    </ul>
+                  </div>
+                  <button 
+                    className={`service-learn-btn ${activeService === 0 ? 'active' : ''}`}
+                    onClick={() => toggleServiceDetails(0)}
+                  >
+                    <span className="btn-text">{activeService === 0 ? 'Show Less' : 'Learn More'}</span>
+                    <span className="btn-icon">{activeService === 0 ? '↑' : '→'}</span>
+                  </button>
+                </div>
               </div>
-              <ul className="service-list">
-                <li className="service-item">
-                  <span className="service-dot"></span>
-                  <span className="service-text">Policy Research & Analysis</span>
-                </li>
-                <li className="service-item">
-                  <span className="service-dot"></span>
-                  <span className="service-text">Socio-Economic Surveys</span>
-                </li>
-                <li className="service-item">
-                  <span className="service-dot"></span>
-                  <span className="service-text">Gender & Equity Studies</span>
-                </li>
-                <li className="service-item">
-                  <span className="service-dot"></span>
-                  <span className="service-text">Environmental Impact Assessments</span>
-                </li>
-                <li className="service-item">
-                  <span className="service-dot"></span>
-                  <span className="service-text">Data Analytics & Insights</span>
-                </li>
-                <li className="service-item">
-                  <span className="service-dot"></span>
-                  <span className="service-text">Market Research & Feasibility Studies</span>
-                </li>
-                <li className="service-item">
-                  <span className="service-dot"></span>
-                  <span className="service-text">Public Policy Evaluation</span>
-                </li>
-                <li className="service-item">
-                  <span className="service-dot"></span>
-                  <span className="service-text">Qualitative & Quantitative Research</span>
-                </li>
-                <li className="service-item">
-                  <span className="service-dot"></span>
-                  <span className="service-text">Baseline & Endline Studies</span>
-                </li>
-                <li className="service-item">
-                  <span className="service-dot"></span>
-                  <span className="service-text">Research Capacity Building</span>
-                </li>
-              </ul>
-              <button className="service-learn-btn">Learn More →</button>
             </div>
 
-            <div className="service-category">
-              <div className="service-category-header">
-                <div className="service-category-icon">📚</div>
-                <h3 className="service-category-title">Training</h3>
+            {/* Training Service */}
+            <div className="service-category training">
+              <div className="service-card">
+                <div className="service-image-wrapper">
+                  <img src="/images/training2.webp" alt="Training" className="service-image" />
+                </div>
+                <div className="service-content">
+                  <div className="service-category-header">
+                    <h3 className="service-category-title">Training</h3>
+                    <p className="service-short-desc">Empowering individuals and organizations through learning</p>
+                  </div>
+                  <div className={`service-details ${activeService === 1 ? 'active' : ''}`}>
+                    <ul className="service-list">
+                      <li className="service-item">
+                        <span className="service-dot"></span>
+                        <span className="service-text">Leadership Development</span>
+                      </li>
+                      <li className="service-item">
+                        <span className="service-dot"></span>
+                        <span className="service-text">Technical Skill Building</span>
+                      </li>
+                      <li className="service-item">
+                        <span className="service-dot"></span>
+                        <span className="service-text">Gender & Social Inclusion Training</span>
+                      </li>
+                      <li className="service-item">
+                        <span className="service-dot"></span>
+                        <span className="service-text">Financial Literacy Programs</span>
+                      </li>
+                      <li className="service-item">
+                        <span className="service-dot"></span>
+                        <span className="service-text">Project Management Training</span>
+                      </li>
+                      <li className="service-item">
+                        <span className="service-dot"></span>
+                        <span className="service-text">Monitoring & Evaluation Training</span>
+                      </li>
+                      <li className="service-item">
+                        <span className="service-dot"></span>
+                        <span className="service-text">Communication & Advocacy Skills</span>
+                      </li>
+                      <li className="service-item">
+                        <span className="service-dot"></span>
+                        <span className="service-text">Data Analysis & Research Methodology</span>
+                      </li>
+                      <li className="service-item">
+                        <span className="service-dot"></span>
+                        <span className="service-text">Organizational Capacity Development</span>
+                      </li>
+                      <li className="service-item">
+                        <span className="service-dot"></span>
+                        <span className="service-text">Policy Formulation & Governance Training</span>
+                      </li>
+                    </ul>
+                  </div>
+                  <button 
+                    className={`service-learn-btn ${activeService === 1 ? 'active' : ''}`}
+                    onClick={() => toggleServiceDetails(1)}
+                  >
+                    <span className="btn-text">{activeService === 1 ? 'Show Less' : 'Learn More'}</span>
+                    <span className="btn-icon">{activeService === 1 ? '↑' : '→'}</span>
+                  </button>
+                </div>
               </div>
-              <ul className="service-list">
-                <li className="service-item">
-                  <span className="service-dot"></span>
-                  <span className="service-text">Leadership Development</span>
-                </li>
-                <li className="service-item">
-                  <span className="service-dot"></span>
-                  <span className="service-text">Technical Skill Building</span>
-                </li>
-                <li className="service-item">
-                  <span className="service-dot"></span>
-                  <span className="service-text">Gender & Social Inclusion Training</span>
-                </li>
-                <li className="service-item">
-                  <span className="service-dot"></span>
-                  <span className="service-text">Financial Literacy Programs</span>
-                </li>
-                <li className="service-item">
-                  <span className="service-dot"></span>
-                  <span className="service-text">Project Management Training</span>
-                </li>
-                <li className="service-item">
-                  <span className="service-dot"></span>
-                  <span className="service-text">Monitoring & Evaluation Training</span>
-                </li>
-                <li className="service-item">
-                  <span className="service-dot"></span>
-                  <span className="service-text">Communication & Advocacy Skills</span>
-                </li>
-                <li className="service-item">
-                  <span className="service-dot"></span>
-                  <span className="service-text">Data Analysis & Research Methodology</span>
-                </li>
-                <li className="service-item">
-                  <span className="service-dot"></span>
-                  <span className="service-text">Organizational Capacity Development</span>
-                </li>
-                <li className="service-item">
-                  <span className="service-dot"></span>
-                  <span className="service-text">Policy Formulation & Governance Training</span>
-                </li>
-              </ul>
-              <button className="service-learn-btn">Learn More →</button>
             </div>
 
-            <div className="service-category">
-              <div className="service-category-header">
-                <div className="service-category-icon">💼</div>
-                <h3 className="service-category-title">Consulting</h3>
+            {/* Consulting Service */}
+            <div className="service-category consulting">
+              <div className="service-card">
+                <div className="service-image-wrapper">
+                  <img src="/images/cons.jpg" alt="Consulting" className="service-image" />
+                </div>
+                <div className="service-content">
+                  <div className="service-category-header">
+                    <h3 className="service-category-title">Consulting</h3>
+                    <p className="service-short-desc">Expert guidance for sustainable growth and impact</p>
+                  </div>
+                  <div className={`service-details ${activeService === 2 ? 'active' : ''}`}>
+                    <ul className="service-list">
+                      <li className="service-item">
+                        <span className="service-dot"></span>
+                        <span className="service-text">Strategic Planning & Advisory</span>
+                      </li>
+                      <li className="service-item">
+                        <span className="service-dot"></span>
+                        <span className="service-text">Organizational Development</span>
+                      </li>
+                      <li className="service-item">
+                        <span className="service-dot"></span>
+                        <span className="service-text">Policy Formulation & Reform</span>
+                      </li>
+                      <li className="service-item">
+                        <span className="service-dot"></span>
+                        <span className="service-text">Impact Evaluation & Monitoring</span>
+                      </li>
+                      <li className="service-item">
+                        <span className="service-dot"></span>
+                        <span className="service-text">Sector-Specific Expert Advisory</span>
+                      </li>
+                    </ul>
+                  </div>
+                  <button 
+                    className={`service-learn-btn ${activeService === 2 ? 'active' : ''}`}
+                    onClick={() => toggleServiceDetails(2)}
+                  >
+                    <span className="btn-text">{activeService === 2 ? 'Show Less' : 'Learn More'}</span>
+                    <span className="btn-icon">{activeService === 2 ? '↑' : '→'}</span>
+                  </button>
+                </div>
               </div>
-              <ul className="service-list">
-                <li className="service-item">
-                  <span className="service-dot"></span>
-                  <span className="service-text">Strategic Planning & Advisory</span>
-                </li>
-                <li className="service-item">
-                  <span className="service-dot"></span>
-                  <span className="service-text">Organizational Development</span>
-                </li>
-                <li className="service-item">
-                  <span className="service-dot"></span>
-                  <span className="service-text">Policy Formulation & Reform</span>
-                </li>
-                <li className="service-item">
-                  <span className="service-dot"></span>
-                  <span className="service-text">Impact Evaluation & Monitoring</span>
-                </li>
-                <li className="service-item">
-                  <span className="service-dot"></span>
-                  <span className="service-text">Sector-Specific Expert Advisory</span>
-                </li>
-              </ul>
-              <button className="service-learn-btn">Learn More →</button>
             </div>
           </div>
         </div>
@@ -718,7 +819,6 @@ function Home({ onNavigate, route }) {
         <div className="team-container">
           {/* Section Header */}
           <div className="team-header">
-            
             <h2 className="team-title">
               <span className="team-title-line1">Meet</span>
               <span className="team-title-line2">Our Team</span>
@@ -865,6 +965,39 @@ function Home({ onNavigate, route }) {
           )}
         </div>
       </div>
+
+      {/* News and Events Section */}
+      <section className="news-section" id="news">
+        <div className="news-container">
+          <div className="news-header">
+            <h2 className="news-title">
+              <span className="news-title-line1">News &amp;</span>
+              <span className="news-title-line2">Events</span>
+            </h2>
+          </div>
+
+          <div className="news-grid">
+            {newsEvents.map((item) => (
+              <div className="news-card" key={item.id}>
+                <div className="news-image-wrapper">
+                  <img src={item.image} alt={item.title} className="news-image" />
+                  <span className="news-category">{item.category}</span>
+                </div>
+                <div className="news-content">
+                  <div className="news-meta">
+                    <span className="news-date">{item.date}</span>
+                  </div>
+                  <h3 className="news-card-title">{item.title}</h3>
+                  <p className="news-excerpt">{item.excerpt}</p>
+                  <a href={item.link} className="news-read-more">
+                    Read More <span className="news-arrow">→</span>
+                  </a>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
       {/* Recent Publications Section */}
       <section className="publications-section">
