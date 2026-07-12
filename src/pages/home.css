@@ -240,7 +240,6 @@ p, span, a, li, .service-text, .focus-card-description,
 .card {
   flex: 1;
   width: 100%;
-  background: #66588F;
   border-radius: 12px;
   padding: 0.7rem 1rem;
   text-align: center;
@@ -248,6 +247,23 @@ p, span, a, li, .service-text, .focus-card-description,
   border: 1px solid rgba(102, 88, 143, 0.15);
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
   cursor: pointer;
+  border-color: white;
+  position: relative;
+  background: transparent;
+}
+
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #66588F;
+  opacity: 0.5; 
+  border-radius: 12px;
+  z-index: -1;
 }
 
 .card:hover {
@@ -262,6 +278,43 @@ p, span, a, li, .service-text, .focus-card-description,
   color: #ffffff;
   margin: 0;
   letter-spacing: 0.05em;
+  opacity:1;
+}
+
+/* Hero Excellence Box */
+.hero-section .excellence-container {
+  width: min(100%, 760px);
+  margin: 1.4rem auto 0;
+  padding: 1.2rem 1.4rem;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
+  text-align: center;
+}
+
+.hero-section .excellence-content {
+  padding: 0;
+}
+
+.hero-section .excellence-title-single {
+  font-size: clamp(1.35rem, 2.4vw, 1.8rem);
+  font-weight: 600;
+  color: #ffffff;
+  line-height: 1.25;
+  margin-bottom: 0.65rem;
+  letter-spacing: 0.05em;
+}
+
+.hero-section .excellence-description {
+  font-size: clamp(0.95rem, 1vw, 1.05rem);
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.94);
+  max-width: 680px;
+  margin: 0 auto;
+  font-weight: 400;
 }
 
 /* ============================================
@@ -393,6 +446,19 @@ p, span, a, li, .service-text, .focus-card-description,
   .card-title {
     font-size: 0.95rem;
   }
+
+  .hero-section .excellence-container {
+    margin-top: 1rem;
+    padding: 1rem 0.9rem;
+  }
+
+  .hero-section .excellence-title-single {
+    font-size: 1.1rem;
+  }
+
+  .hero-section .excellence-description {
+    font-size: 0.9rem;
+  }
 }
 
 /* Small Mobile */
@@ -523,7 +589,7 @@ p, span, a, li, .service-text, .focus-card-description,
   font-family: 'Bigola Display', 'Inter', -apple-system, sans-serif;
   font-size: clamp(2rem, 3vw, 2.5rem);
   font-weight: 700;
-  color: #66588F;
+  color: White;
   line-height: 1.2;
   margin-bottom: 1.5rem;
   letter-spacing: 0.02em;
@@ -534,7 +600,7 @@ p, span, a, li, .service-text, .focus-card-description,
   font-family: 'Inter', -apple-system, sans-serif;
   font-size: clamp(1rem, 1.1vw, 1.1rem);
   line-height: 1.8;
-  color: #475569;
+  color: white;
   max-width: 700px;
   margin: 0 auto;
   font-weight: 300;
@@ -1026,25 +1092,14 @@ p, span, a, li, .service-text, .focus-card-description,
 }
 
 /* ============================================
-   Explore Our Services Section - Matching Legacy Design
+   Services Section - Accordion List
    ============================================ */
 
-.services-section {
-  padding: 2rem 2rem;
-  background: #f8f6f3;
+.services-section1 {
+  padding: 4rem 2rem;
+  background: #fffef8;
   position: relative;
   overflow: hidden;
-}
-
-.services-section::before {
-  content: '';
-  position: absolute;
-  bottom: -20%;
-  left: -10%;
-  width: 600px;
-  height: 600px;
-  background: radial-gradient(circle, rgba(102, 88, 143, 0.03) 0%, transparent 70%);
-  border-radius: 50%;
 }
 
 .services-container {
@@ -1054,164 +1109,218 @@ p, span, a, li, .service-text, .focus-card-description,
   z-index: 1;
 }
 
-/* Services Header - Matching Legacy Style */
-
+/* Services Header */
 .services-header {
   text-align: left;
-  margin-bottom: 50px;
-  padding-left: 0;
-  border-left: 4px solid #66588F;
-  padding-left: 20px;
+  margin-bottom: 2.5rem;
 }
 
-.services-header {
-  text-align: left;
-  margin-bottom: 4rem;
-}
-
-.services-badge {
-  display: inline-flex;
+.services-header-top {
+  display: flex;
   align-items: center;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  gap: 2rem;
 }
 
-.badge-line-left {
-  width: 40px;
-  height: 2px;
-  background: linear-gradient(90deg, #66588F, transparent);
+.services-header-title {
+  font-family: 'Bigola Display', 'Inter', -apple-system, sans-serif;
+  font-size: clamp(1.8rem, 3vw, 2.2rem);
+  font-weight: 400;
+  color: #66588F;
+  margin: 0;
+  letter-spacing: 0.02em;
+  font-style: italic;
 }
 
-.badge-line-right {
-  width: 40px;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, #66588F);
-}
-
-.badge-text {
+.services-view-btn {
   font-family: 'Inter', -apple-system, sans-serif;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.15em;
-  color: #66588F;
-  background: rgba(102, 88, 143, 0.1);
-  padding: 0.3rem 1.2rem;
+  letter-spacing: 0.08em;
+  color: #0f172a;
+  background: transparent;
+  border: 2px solid #0f172a;
+  padding: 0.6rem 1.5rem;
   border-radius: 50px;
-}
-
-.services-title {
-  display: flex;
-  flex-direction: column;
-  line-height: 1.1;
-  margin-bottom: 1rem;
-}
-
-.services-title-line1 {
-  display: block;
-  font-family: 'Bigola Display', 'Inter', -apple-system, sans-serif;
-font-size: clamp(1rem, 2vw, 2rem);
-  font-weight: 00;
-  color: Black;
-  letter-spacing: 0.05em;
-}
-
-.services-title-line2 {
-  display: block;
-  font-family: 'Bigola Display', 'Inter', -apple-system, sans-serif;
-  font-size: clamp(2rem, 3vw, 2.5rem);
-  font-weight: 300;
-  color: #66588F;
-  letter-spacing: 0.05em;
-}
-
-.services-subtitle {
-  font-family: 'Inter', -apple-system, sans-serif;
-  font-size: clamp(1rem, 1.2vw, 1.15rem);
-  color: Black;
-  max-width: 550px;
-  font-weight: 300;
-  line-height: 1.8;
-  letter-spacing: 0.02em;
-  margin-top: 0.5rem;
-}
-
-
-
-/* Service Category Card */
-.service-category {
-  background: #ffffff;
-  border-radius: 20px;
-  
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  border: 1px solid rgba(102, 88, 143, 0.06);
-  position: relative;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-}
-
-.service-category::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 4px;
-  background: linear-gradient(90deg, #66588F, #8B7BB8, #66588F);
-  opacity: 0;
-  transition: opacity 0.4s ease;
-}
-
-.service-category:hover::before {
-  opacity: 1;
-}
-
-.service-category:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 20px 60px rgba(102, 88, 143, 0.12);
-  border-color: rgba(102, 88, 143, 0.12);
-}
-
-/* Category Header */
-.service-category-header {
+  cursor: pointer;
+  transition: all 0.3s ease;
   display: flex;
   align-items: center;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-  padding-bottom: 1rem;
-  border-bottom: 2px solid rgba(102, 88, 143, 0.08);
-  flex-shrink: 0;
+  gap: 0.5rem;
+  white-space: nowrap;
 }
 
-.service-category-icon {
-  font-size: 2rem;
-  line-height: 1;
-  width: 50px;
-  height: 50px;
-  background: rgba(102, 88, 143, 0.08);
-  border-radius: 12px;
+.services-view-btn:hover {
+  background: #0f172a;
+  color: #ffffff;
+  transform: translateX(3px);
+}
+
+.arrow-icon {
+  display: inline-block;
+  font-size: 1.1rem;
+}
+
+.services-divider {
+  width: 100%;
+  height: 5px;
+  background: #685f9c;
+}
+
+/* Services Accordion List */
+.services-accordion {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+ padding: .5rem 2rem 1.5rem 3rem; 
+}
+
+/* Service Item */
+.service-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.service-item-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.4rem 0;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  user-select: none;
+  gap: 1.5rem; /* টেক্সট আর আইকনের মাঝে 1.5rem gap */
+  width: 100%;
+}
+
+.service-item-title {
+  flex: 1; /* টেক্সট বাম দিকে থাকবে */
+  font-family: 'Bigola Display', 'Inter', -apple-system, sans-serif;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #0f172a;
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.service-toggle-btn {
+  flex-shrink: 0; /* আইকন সঙ্কুচিত হবে না */
+  font-family: 'Inter', -apple-system, sans-serif;
+  font-size: 1.8rem;
+  font-weight: 300;
+  color: #0f172a;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  width: 40px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.4s ease;
-  flex-shrink: 0;
+  transition: all 0.3s ease;
+  margin-left: 0; /* auto সরিয়ে দেওয়া হয়েছে */
 }
 
-.service-category:hover .service-category-icon {
-  background: rgba(102, 88, 143, 0.15);
-  transform: scale(1.05);
+.service-item-header:hover .service-item-title {
+  color: #66588F;
 }
 
-.service-category-title {
+.service-item-title {
   font-family: 'Bigola Display', 'Inter', -apple-system, sans-serif;
-  font-size: 1.6rem;
-  font-weight: 700;
-  color: #0f172a;
+  font-size: clamp(1.1rem, 2vw, 1.35rem);
+  font-weight: 400;
+  color: #66588F;
   margin: 0;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.01em;
+  flex: 1;
 }
+
+.service-toggle-btn {
+  font-family: 'Inter', -apple-system, sans-serif;
+  font-size: 1.4rem;
+  font-weight: 300;
+  color: #66588F;
+  background: transparent;
+  border: 2px solid #66588F;
+  cursor: pointer;
+  padding: 0;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+  margin-left: 1rem;
+  border-radius: 50%;
+  line-height: 1;
+}
+
+.service-toggle-btn:hover {
+  color: #ffffff;
+  background: #66588F;
+  transform: scale(1.08);
+  box-shadow: 0 4px 12px rgba(102, 88, 143, 0.25);
+}
+
+.service-toggle-btn.active {
+  background: #66588F;
+  color: #ffffff;
+}
+
+/* Service Content - Hidden by default */
+.service-item-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  opacity: 0;
+}
+
+.service-item-content.active {
+  max-height: 500px;
+  opacity: 1;
+  margin-bottom: 1rem;
+}
+
+.service-description {
+  font-family: 'Inter', -apple-system, sans-serif;
+  font-size: 0.95rem;
+  color: #475569;
+  margin: 0 0 1rem 0;
+  line-height: 1.6;
+  font-weight: 400;
+}
+
+.service-points {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.service-point {
+  font-family: 'Inter', -apple-system, sans-serif;
+  font-size: 0.9rem;
+  color: #475569;
+  margin: 0;
+  padding-left: 1.2rem;
+  position: relative;
+  line-height: 1.5;
+}
+
+.service-point::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  color: #66588F;
+  font-weight: bold;
+}
+
 
 /* Service List - With Scroll for Long Lists */
 .service-list {
@@ -1243,179 +1352,114 @@ font-size: clamp(1rem, 2vw, 2rem);
   background: rgba(102, 88, 143, 0.3);
 }
 
-.service-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.8rem;
-  padding: 0.5rem 0;
-  transition: all 0.3s ease;
-  cursor: default;
-}
-
-.service-item:hover {
-  padding-left: 0.5rem;
-}
-
-.service-dot {
-  width: 6px;
-  height: 6px;
-  min-width: 6px;
-  border-radius: 50%;
-  background: #66588F;
-  margin-top: 0.55rem;
-  transition: all 0.3s ease;
-}
-
-.service-item:hover .service-dot {
-  transform: scale(1.3);
-  background: #8B7BB8;
-}
-
-.service-text {
-  font-family: 'Inter', -apple-system, sans-serif;
-  font-size: 0.9rem;
-  color: white;
-  line-height: 1.6;
-  font-weight: 400;
-}
-
-/* Learn More Button */
-.service-learn-btn {
-  font-family: 'Inter', -apple-system, sans-serif;
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: #66588F;
-  background: transparent;
-  border: 2px solid #66588F;
-  padding: 0.7rem 1.8rem;
-  border-radius: 50px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  letter-spacing: 0.03em;
-  width: 100%;
-  margin-top: 0.5rem;
-  flex-shrink: 0;
-}
-
-.service-learn-btn:hover {
-  background: #66588F;
-  color: #ffffff;
-  transform: scale(1.02);
-  box-shadow: 0 8px 25px rgba(102, 88, 143, 0.25);
-}
-
-/* Responsive */
+/* Responsive - Services Section */
 @media (max-width: 1024px) {
- 
-
-  .services-section {
-    padding: 4rem 1.8rem;
+  .services-section1 {
+    padding: 3rem 1.8rem;
   }
 
-  .service-category {
-    padding: 2rem 1.5rem;
+  .services-header-top {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
   }
 
-  .service-category-title {
+  .services-view-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .service-item-title {
+    font-size: 1.1rem;
+  }
+
+  .service-toggle-btn {
+    border: 2px solid #66588F;
+    width: 38px;
+    height: 38px;
     font-size: 1.3rem;
-  }
-
-  .service-list {
-    max-height: 280px;
   }
 }
 
 @media (max-width: 768px) {
-  .services-grid {
-    grid-template-columns: 1fr;
+  .services-section1 {
+    padding: 2.5rem 1.5rem;
     max-width: 500px;
     margin: 0 auto;
   }
 
-  .services-section {
-    padding: 3rem 1.5rem;
+  .services-section1 {
+    padding: 2.5rem 1.5rem;
   }
 
   .services-header {
-    text-align: center;
-    margin-bottom: 3rem;
+    margin-bottom: 2rem;
   }
 
-  .services-badge {
+  .services-header-top {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .services-view-btn {
+    width: 100%;
     justify-content: center;
+    font-size: 0.8rem;
+    padding: 0.5rem 1.2rem;
   }
 
-  .services-title {
-    align-items: center;
+  .service-item-title {
+    font-size: 1rem;
   }
 
-  .services-subtitle {
-    margin-left: auto;
-    margin-right: auto;
-    text-align: center;
+  .service-item-header {
+    padding: 1rem 0;
   }
 
-  .service-category {
-    padding: 2rem 1.5rem;
-  }
-
-  .service-category-header {
-    gap: 0.8rem;
-  }
-
-  .service-category-icon {
-    width: 45px;
-    height: 45px;
-    font-size: 1.6rem;
-  }
-
-  .service-category-title {
-    font-size: 1.3rem;
-  }
-
-  .service-text {
+  .service-description {
     font-size: 0.9rem;
   }
 
-  .service-list {
-    max-height: 260px;
+  .service-point {
+    font-size: 0.85rem;
   }
 }
 
 @media (max-width: 480px) {
-  .services-section {
-    padding: 2.5rem 1rem;
+  .services-section1 {
+    padding: 2rem 1rem;
   }
 
-  .service-category {
-    padding: 1.5rem 1.2rem;
+  .services-header-title {
+    font-size: 1.5rem;
   }
 
-  .service-category-icon {
-    width: 40px;
-    height: 40px;
-    font-size: 1.3rem;
+  .services-view-btn {
+    font-size: 0.75rem;
+    padding: 0.5rem 1rem;
   }
 
-  .service-category-title {
-    font-size: 1.1rem;
+  .service-item-title {
+    font-size: 0.95rem;
   }
 
-  .service-text {
+  .service-toggle-btn {
+    font-size: 1.2rem;
+    width: 38px;
+    height: 38px;
+    border: 2px solid #66588F;
+  }
+
+  .service-item-header {
+    padding: 0.9rem 0;
+  }
+
+  .service-description {
     font-size: 0.85rem;
   }
 
-  .service-item {
-    padding: 0.4rem 0;
-  }
-
-  .service-learn-btn {
+  .service-point {
     font-size: 0.8rem;
-    padding: 0.6rem 1.5rem;
-  }
-
-  .service-list {
-    max-height: 220px;
   }
 }
 
@@ -3261,7 +3305,7 @@ font-size: clamp(1rem, 2vw, 2rem);
   font-family: 'Inter', -apple-system, sans-serif;
   font-size: clamp(1rem, 1.1vw, 1.1rem);
   line-height: 1.8;
-  color: #475569;
+  color: white;
   max-width: 700px;
   margin: 0 auto 0;
   font-weight: 300;
@@ -4368,5 +4412,272 @@ font-size: clamp(1rem, 2vw, 2rem);
   
   .news-image-wrapper {
     height: 180px;
+  }
+}
+
+
+/* ============================================
+   SERVICES SECTION - DESIGN MATCHING IMAGE
+   ============================================ */
+
+.services-section1 {
+  padding: 4rem 2rem;
+  background: #ffffff;
+  position: relative;
+}
+
+.services-container {
+  max-width: 1300px;
+  margin: 0 auto;
+}
+
+/* Header */
+.services-header {
+  text-align: left;
+  margin-bottom: 3rem;
+}
+
+.services-header-sub {
+  font-family: 'Inter', -apple-system, sans-serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: #66588F;
+  margin-bottom: 0.3rem;
+  opacity: 0.8;
+}
+
+.services-title {
+  font-family: 'Bigola Display', 'Inter', -apple-system, sans-serif;
+  font-size: clamp(2.5rem, 4vw, 3.8rem);
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+/* Grid - 3 Columns */
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+}
+
+/* Service Card */
+.service-category {
+  background: #f8f6f3;
+  border-radius: 16px;
+  padding: 2rem 1.8rem 1.8rem;
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  border: 1px solid rgba(102, 88, 143, 0.06);
+  display: flex;
+  flex-direction: column;
+}
+
+.service-category:hover {
+  background: #f0ede8;
+  transform: translateY(-4px);
+  box-shadow: 0 8px 30px rgba(102, 88, 143, 0.08);
+}
+
+/* Service Header - Title + Plus Button */
+.service-category-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.service-category-title {
+  font-family: 'Bigola Display', 'Inter', -apple-system, sans-serif;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #0f172a;
+  margin: 0;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+}
+
+/* Plus Icon Button */
+.service-toggle-btn {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid #66588F;
+  background: transparent;
+  color: #66588F;
+  font-size: 1.2rem;
+  font-weight: 300;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  padding: 0;
+}
+
+.service-toggle-btn:hover {
+  background: #66588F;
+  color: #ffffff;
+  transform: rotate(90deg);
+}
+
+.service-toggle-btn.active {
+  background: #66588F;
+  color: #ffffff;
+  transform: rotate(45deg);
+}
+
+/* Service Details - Initially Hidden */
+.service-details {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              opacity 0.4s ease,
+              margin 0.3s ease;
+  opacity: 0;
+  margin: 0;
+}
+
+.service-details.active {
+  max-height: 500px;
+  opacity: 1;
+  margin: 0.8rem 0 0 0;
+}
+
+/* Service List */
+.service-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.service-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.7rem;
+  font-family: 'Bigola Display', -apple-system, sans-serif;
+  font-size: 0.9rem;
+  color: #1e293b;
+  line-height: 1.5;
+  padding: 0.3rem 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.service-item:last-child {
+  border-bottom: none;
+}
+
+.service-dot {
+  flex-shrink: 0;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #66588F;
+  margin-top: 0.55rem;
+  opacity: 0.6;
+}
+
+.service-text {
+  flex: 1;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (max-width: 1024px) {
+  .services-section1 {
+    padding: 3rem 1.5rem;
+  }
+
+  .services-grid {
+    gap: 1.5rem;
+  }
+
+  .service-category {
+    padding: 1.5rem 1.2rem 1.2rem;
+  }
+
+  .service-category-title {
+    font-size: 1.3rem;
+  }
+
+  .services-title {
+    font-size: clamp(2rem, 3.5vw, 3rem);
+  }
+}
+
+@media (max-width: 768px) {
+  .services-section1 {
+    padding: 2.5rem 1rem;
+  }
+
+  .services-grid {
+    grid-template-columns: 1fr;
+    gap: 1.2rem;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+
+  .service-category {
+    padding: 1.2rem 1rem 1rem;
+  }
+
+  .service-category-title {
+    font-size: 1.2rem;
+  }
+
+  .service-toggle-btn {
+    width: 28px;
+    height: 28px;
+    font-size: 1rem;
+  }
+
+  .service-item {
+    font-size: 0.85rem;
+  }
+
+  .services-title {
+    font-size: clamp(1.8rem, 3vw, 2.2rem);
+  }
+
+  .services-header-sub {
+    font-size: 0.7rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .services-section1 {
+    padding: 2rem 0.8rem;
+  }
+
+  .service-category {
+    padding: 1rem 0.8rem 0.8rem;
+  }
+
+  .service-category-title {
+    font-size: 1.1rem;
+  }
+
+  .service-toggle-btn {
+    width: 26px;
+    height: 26px;
+    font-size: 0.9rem;
+  }
+
+  .service-item {
+    font-size: 0.8rem;
+  }
+
+  .services-title {
+    font-size: 1.6rem;
   }
 }

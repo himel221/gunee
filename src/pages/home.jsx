@@ -20,7 +20,7 @@ function Home({ onNavigate, route }) {
     setActiveMember(activeMember === index ? null : index);
   };
 
-  const toggleServiceDetails = (index) => {
+  const toggleService = (index) => {
     setActiveService(activeService === index ? null : index);
   };
 
@@ -47,7 +47,61 @@ function Home({ onNavigate, route }) {
     window.open(gmailUrl, '_blank');
   };
 
-  // Team Members Data with Full Bios
+  // ============================================
+  // SERVICE DATA
+  // ============================================
+  const serviceData = [
+    {
+      id: 0,
+      title: 'Research',
+      description: 'Data-driven insights for informed decision-making',
+      points: [
+        'Policy Research & Analysis',
+        'Socio-Economic Surveys',
+        'Gender & Equity Studies',
+        'Environmental Impact Assessments',
+        'Data Analytics & Insights',
+        'Market Research & Feasibility Studies',
+        'Public Policy Evaluation',
+        'Qualitative & Quantitative Research',
+        'Baseline & Endline Studies',
+        'Research Capacity Building'
+      ]
+    },
+    {
+      id: 1,
+      title: 'Training',
+      description: 'Empowering individuals and organizations through learning',
+      points: [
+        'Leadership Development',
+        'Technical Skill Building',
+        'Gender & Social Inclusion Training',
+        'Financial Literacy Programs',
+        'Project Management Training',
+        'Monitoring & Evaluation Training',
+        'Communication & Advocacy Skills',
+        'Data Analysis & Research Methodology',
+        'Organizational Capacity Development',
+        'Policy Formulation & Governance Training'
+      ]
+    },
+    {
+      id: 2,
+      title: 'Consulting',
+      description: 'Expert guidance for sustainable growth and impact',
+      points: [
+        'Strategic Planning & Advisory',
+        'Organizational Development',
+        'Policy Formulation & Reform',
+        'Impact Evaluation & Monitoring',
+        'Sector-Specific Expert Advisory'
+      ]
+    }
+  ];
+
+  // ============================================
+  // TEAM MEMBERS DATA (Full List)
+  // ============================================
   const teamMembers = [
     // Board of Directors (id: 0-4)
     {
@@ -409,7 +463,9 @@ function Home({ onNavigate, route }) {
     return teamMembers.filter(member => member.category === selectedCategory);
   };
 
-  // News and Events Data
+  // ============================================
+  // NEWS & EVENTS DATA
+  // ============================================
   const newsEvents = [
     {
       id: 1,
@@ -442,9 +498,10 @@ function Home({ onNavigate, route }) {
 
   return (
     <>
-      {/* Hero Section with Background */}
+      {/* ============================================
+          HERO SECTION
+          ============================================ */}
       <section className="hero-section">
-        {/* Background Video - Fixed */}
         <div className="hero-bg-container">
           <video 
             src="/images/bg.mp4" 
@@ -456,10 +513,8 @@ function Home({ onNavigate, route }) {
           />
         </div>
         
-        {/* White Overlay */}
         <div className="hero-overlay"></div>
         
-        {/* Logo - Fixed upon the background picture */}
         <div className="hero-logo">
           <a href="#hero" className="logo-wrap">
             <div className="logo-icon">
@@ -472,14 +527,12 @@ function Home({ onNavigate, route }) {
           </a>
         </div>
 
-        {/* Hero Content */}
         <div className="hero-content">
           <h3 className="hero-title">
             <span className="title-line1">Transforming Bangladesh through</span>
             <span className="title-line2">Expertise, Innovation, and Equity</span>
           </h3>
           
-          {/* Three Cards - Research, Training, Consulting */}
           <div className="cards-container">
             <div className="card-wrapper">
               <div className="card-image-wrapper">
@@ -520,25 +573,23 @@ function Home({ onNavigate, route }) {
               </div>
             </div>
           </div>
-        </div>
-      </section>
 
-      {/* Born from Excellence. Built for Impact Section */}
-      <section className="excellence-section1">
-        <div className="excellence-container">
-          <div className="excellence-content">
-            <h2 className="excellence-title-single">
-              Born from Excellence, Built for Impact.
-            </h2>
-            
-            <p className="excellence-description">
-              Gunee Bangladesh Limited is a new initiative powered by experts previously hailing from Dhaka University, Bangladesh Bank, and BUET. Our team has delivered impact across sectors including gender, economics, and technology – nationally and globally.
-            </p>
+          <div className="excellence-container">
+            <div className="excellence-content">
+              <h2 className="excellence-title-single">
+                Born from Excellence, Built for Impact.
+              </h2>
+              <p className="excellence-description">
+                Gunee Bangladesh Limited is a new initiative powered by experts previously hailing from Dhaka University, Bangladesh Bank, and BUET. Our team has delivered impact across sectors including gender, economics, and technology – nationally and globally.
+              </p>
+            </div>
           </div>
         </div>
       </section>
-      
-      {/* Our Focus Areas Section */}
+
+      {/* ============================================
+          FOCUS AREAS SECTION
+          ============================================ */}
       <section className="focus-areas-section">
         <div className="focus-areas-container">
           <div className="focus-header">
@@ -622,202 +673,54 @@ function Home({ onNavigate, route }) {
         </div>
       </section>
 
-      {/* Explore Our Services Section */}
+      {/* ============================================
+          SERVICES SECTION - ACCORDION LIST
+          ============================================ */}
       <section className="services-section1">
         <div className="services-container">
-          <div className="services-header">
-            <h2 className="services-title" id="service">
-              <span className="services-title-line1">Explore</span>
-              <span className="services-title-line2"> Our Services</span>
+          <div className="focus-header">
+            <h2 className="focus-title">
+              <span className="focus-title-line1">Our</span>
+              <span className="focus-title-line2">Services</span>
             </h2>
           </div>
 
-          <div className="services-grid">
-            {/* Research Service */}
-            <div className="service-category research">
-              <div className="service-card">
-                <div className="service-image-wrapper">
-                  <img src="/images/research2.jpg" alt="Research" className="service-image" />
-                </div>
-                <div className="service-content">
-                  <div className="service-category-header">
-                    <h3 className="service-category-title">Research</h3>
-                    <p className="service-short-desc">Data-driven insights for informed decision-making</p>
-                  </div>
-                  <div className={`service-details ${activeService === 0 ? 'active' : ''}`}>
-                    <ul className="service-list">
-                      <li className="service-item">
-                        <span className="service-dot"></span>
-                        <span className="service-text">Policy Research & Analysis</span>
-                      </li>
-                      <li className="service-item">
-                        <span className="service-dot"></span>
-                        <span className="service-text">Socio-Economic Surveys</span>
-                      </li>
-                      <li className="service-item">
-                        <span className="service-dot"></span>
-                        <span className="service-text">Gender & Equity Studies</span>
-                      </li>
-                      <li className="service-item">
-                        <span className="service-dot"></span>
-                        <span className="service-text">Environmental Impact Assessments</span>
-                      </li>
-                      <li className="service-item">
-                        <span className="service-dot"></span>
-                        <span className="service-text">Data Analytics & Insights</span>
-                      </li>
-                      <li className="service-item">
-                        <span className="service-dot"></span>
-                        <span className="service-text">Market Research & Feasibility Studies</span>
-                      </li>
-                      <li className="service-item">
-                        <span className="service-dot"></span>
-                        <span className="service-text">Public Policy Evaluation</span>
-                      </li>
-                      <li className="service-item">
-                        <span className="service-dot"></span>
-                        <span className="service-text">Qualitative & Quantitative Research</span>
-                      </li>
-                      <li className="service-item">
-                        <span className="service-dot"></span>
-                        <span className="service-text">Baseline & Endline Studies</span>
-                      </li>
-                      <li className="service-item">
-                        <span className="service-dot"></span>
-                        <span className="service-text">Research Capacity Building</span>
-                      </li>
-                    </ul>
-                  </div>
+          <div className="services-accordion">
+            {serviceData.map((service, index) => (
+              <div className="service-item" key={service.id}>
+                <div 
+                  className="service-item-header"
+                  onClick={() => toggleService(activeService === index ? null : index)}
+                >
+                  <h3 className="service-item-title">{service.title}</h3>
                   <button 
-                    className={`service-learn-btn ${activeService === 0 ? 'active' : ''}`}
-                    onClick={() => toggleServiceDetails(0)}
+                    className={`service-toggle-btn ${activeService === index ? 'active' : ''}`}
+                    onClick={() => toggleService(activeService === index ? null : index)}
+                    aria-label={`Toggle ${service.title} details`}
                   >
-                    <span className="btn-text">{activeService === 0 ? 'Show Less' : 'Learn More'}</span>
-                    <span className="btn-icon">{activeService === 0 ? '↑' : '→'}</span>
+                    {activeService === index ? '−' : '+'}
                   </button>
                 </div>
+                <div className={`service-item-content ${activeService === index ? 'active' : ''}`}>
+                  <p className="service-description">{service.description}</p>
+                  <ul className="service-points">
+                    {service.points.map((point, i) => (
+                      <li className="service-point" key={i}>{point}</li>
+                    ))}
+                  </ul>
+                </div>
+                {index < serviceData.length - 1 && <div className="service-divider"></div>}
               </div>
-            </div>
-
-            {/* Training Service */}
-            <div className="service-category training">
-              <div className="service-card">
-                <div className="service-image-wrapper">
-                  <img src="/images/training2.webp" alt="Training" className="service-image" />
-                </div>
-                <div className="service-content">
-                  <div className="service-category-header">
-                    <h3 className="service-category-title">Training</h3>
-                    <p className="service-short-desc">Empowering individuals and organizations through learning</p>
-                  </div>
-                  <div className={`service-details ${activeService === 1 ? 'active' : ''}`}>
-                    <ul className="service-list">
-                      <li className="service-item">
-                        <span className="service-dot"></span>
-                        <span className="service-text">Leadership Development</span>
-                      </li>
-                      <li className="service-item">
-                        <span className="service-dot"></span>
-                        <span className="service-text">Technical Skill Building</span>
-                      </li>
-                      <li className="service-item">
-                        <span className="service-dot"></span>
-                        <span className="service-text">Gender & Social Inclusion Training</span>
-                      </li>
-                      <li className="service-item">
-                        <span className="service-dot"></span>
-                        <span className="service-text">Financial Literacy Programs</span>
-                      </li>
-                      <li className="service-item">
-                        <span className="service-dot"></span>
-                        <span className="service-text">Project Management Training</span>
-                      </li>
-                      <li className="service-item">
-                        <span className="service-dot"></span>
-                        <span className="service-text">Monitoring & Evaluation Training</span>
-                      </li>
-                      <li className="service-item">
-                        <span className="service-dot"></span>
-                        <span className="service-text">Communication & Advocacy Skills</span>
-                      </li>
-                      <li className="service-item">
-                        <span className="service-dot"></span>
-                        <span className="service-text">Data Analysis & Research Methodology</span>
-                      </li>
-                      <li className="service-item">
-                        <span className="service-dot"></span>
-                        <span className="service-text">Organizational Capacity Development</span>
-                      </li>
-                      <li className="service-item">
-                        <span className="service-dot"></span>
-                        <span className="service-text">Policy Formulation & Governance Training</span>
-                      </li>
-                    </ul>
-                  </div>
-                  <button 
-                    className={`service-learn-btn ${activeService === 1 ? 'active' : ''}`}
-                    onClick={() => toggleServiceDetails(1)}
-                  >
-                    <span className="btn-text">{activeService === 1 ? 'Show Less' : 'Learn More'}</span>
-                    <span className="btn-icon">{activeService === 1 ? '↑' : '→'}</span>
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            {/* Consulting Service */}
-            <div className="service-category consulting">
-              <div className="service-card">
-                <div className="service-image-wrapper">
-                  <img src="/images/cons.jpg" alt="Consulting" className="service-image" />
-                </div>
-                <div className="service-content">
-                  <div className="service-category-header">
-                    <h3 className="service-category-title">Consulting</h3>
-                    <p className="service-short-desc">Expert guidance for sustainable growth and impact</p>
-                  </div>
-                  <div className={`service-details ${activeService === 2 ? 'active' : ''}`}>
-                    <ul className="service-list">
-                      <li className="service-item">
-                        <span className="service-dot"></span>
-                        <span className="service-text">Strategic Planning & Advisory</span>
-                      </li>
-                      <li className="service-item">
-                        <span className="service-dot"></span>
-                        <span className="service-text">Organizational Development</span>
-                      </li>
-                      <li className="service-item">
-                        <span className="service-dot"></span>
-                        <span className="service-text">Policy Formulation & Reform</span>
-                      </li>
-                      <li className="service-item">
-                        <span className="service-dot"></span>
-                        <span className="service-text">Impact Evaluation & Monitoring</span>
-                      </li>
-                      <li className="service-item">
-                        <span className="service-dot"></span>
-                        <span className="service-text">Sector-Specific Expert Advisory</span>
-                      </li>
-                    </ul>
-                  </div>
-                  <button 
-                    className={`service-learn-btn ${activeService === 2 ? 'active' : ''}`}
-                    onClick={() => toggleServiceDetails(2)}
-                  >
-                    <span className="btn-text">{activeService === 2 ? 'Show Less' : 'Learn More'}</span>
-                    <span className="btn-icon">{activeService === 2 ? '↑' : '→'}</span>
-                  </button>
-                </div>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Meet The Team Section */}
+      {/* ============================================
+          TEAM SECTION
+          ============================================ */}
       <section className="team-section" id="team">
         <div className="team-container">
-          {/* Section Header */}
           <div className="team-header">
             <h2 className="team-title">
               <span className="team-title-line1">Meet</span>
@@ -825,7 +728,6 @@ function Home({ onNavigate, route }) {
             </h2>
           </div>
 
-          {/* Category Tabs */}
           <div className="team-category-tabs">
             <button 
               className={`category-tab ${selectedCategory === 'Board of Directors' ? 'active' : ''}`}
@@ -847,7 +749,6 @@ function Home({ onNavigate, route }) {
             </button>
           </div>
 
-          {/* Team Members Grid */}
           <div className="team-grid">
             {getFilteredMembers().map((member) => (
               <div 
@@ -869,7 +770,9 @@ function Home({ onNavigate, route }) {
         </div>
       </section>
 
-      {/* Team Member Modal */}
+      {/* ============================================
+          TEAM MODAL
+          ============================================ */}
       <div 
         className={`team-member-modal ${activeMember !== null ? 'active' : ''}`} 
         onClick={() => setActiveMember(null)}
@@ -901,7 +804,6 @@ function Home({ onNavigate, route }) {
                 </p>
                 <div className="modal-divider" style={{ marginBottom: '12px' }}></div>
                 
-                {/* Bio Section - Professional Format */}
                 <div className="modal-bio">
                   <div className="bio-section">
                     <h4 className="bio-heading" style={{
@@ -966,7 +868,9 @@ function Home({ onNavigate, route }) {
         </div>
       </div>
 
-      {/* News and Events Section */}
+      {/* ============================================
+          NEWS & EVENTS SECTION
+          ============================================ */}
       <section className="news-section" id="news">
         <div className="news-container">
           <div className="news-header">
@@ -999,7 +903,9 @@ function Home({ onNavigate, route }) {
         </div>
       </section>
 
-      {/* Recent Publications Section */}
+      {/* ============================================
+          PUBLICATIONS SECTION
+          ============================================ */}
       <section className="publications-section">
         <div className="publications-container">
           <div className="publications-header">
@@ -1034,7 +940,9 @@ function Home({ onNavigate, route }) {
         </div>
       </section>
 
-      {/* Footer Section */}
+      {/* ============================================
+          FOOTER SECTION
+          ============================================ */}
       <footer className="footer-section">
         <div className="footer-container">
           <div className="footer-content">
