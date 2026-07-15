@@ -1097,7 +1097,7 @@ p, span, a, li, .service-text, .focus-card-description,
 
 .services-section1 {
   padding: 4rem 2rem;
-  background: #fffef8;
+  background: #e8e4dc;
   position: relative;
   overflow: hidden;
 }
@@ -1164,10 +1164,15 @@ p, span, a, li, .service-text, .focus-card-description,
 }
 
 .services-divider {
-  width: 100%;
-  height: 5px;
-  background: #685f9c;
+  width: 60px;
+  height: 3px;
+  background: #66588F;
+  border: none;
+  border-radius: 4px;
+  margin: 0.5rem 0 1.5rem 0;
 }
+
+
 
 /* Services Accordion List */
 .services-accordion {
@@ -3236,7 +3241,7 @@ p, span, a, li, .service-text, .focus-card-description,
 /* Services Section */
 .services-section1 {
   padding: 2rem 2rem;
-  background: black;
+  background: #e8e4dc;
   position: relative;
   overflow: hidden;
   margin-top: -2px;
@@ -4422,7 +4427,7 @@ p, span, a, li, .service-text, .focus-card-description,
 
 .services-section1 {
   padding: 4rem 2rem;
-  background: #ffffff;
+  background: #e8e4dc;
   position: relative;
 }
 
@@ -4559,20 +4564,19 @@ p, span, a, li, .service-text, .focus-card-description,
   gap: 0.5rem;
 }
 
+/* ============================================
+   SERVICES SECTION - TOP & BOTTOM DIVIDERS
+   ============================================ */
+
 .service-item {
   display: flex;
-  align-items: flex-start;
-  gap: 0.7rem;
-  font-family: 'Bigola Display', -apple-system, sans-serif;
-  font-size: 0.9rem;
-  color: #1e293b;
-  line-height: 1.5;
-  padding: 0.3rem 0;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
-}
-
-.service-item:last-child {
-  border-bottom: none;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.2rem 0;
+  border-top: 1px solid rgb(0, 0, 0);
+  border-bottom: 1px solid rgb(0, 0, 0);
+  
+  transition: all 0.3s ease;
 }
 
 .service-dot {

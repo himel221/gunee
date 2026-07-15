@@ -617,7 +617,7 @@ function Home({ onNavigate, route }) {
             <div className="focus-card">
               <div className="focus-image-wrapper">
                 <img 
-                  src="/images/economic.jpg" 
+                  src="/images/money.png" 
                   alt="Economics & Finance"
                   className="focus-card-image"
                 />
@@ -631,7 +631,7 @@ function Home({ onNavigate, route }) {
             <div className="focus-card">
               <div className="focus-image-wrapper">
                 <img 
-                  src="/images/engineer.jpg" 
+                  src="/images/ET.png" 
                   alt="Engineering & Technology"
                   className="focus-card-image"
                 />
@@ -645,7 +645,7 @@ function Home({ onNavigate, route }) {
             <div className="focus-card">
               <div className="focus-image-wrapper">
                 <img 
-                  src="/images/media.jpg" 
+                  src="/images/mc.png" 
                   alt="Media & Communication"
                   className="focus-card-image"
                 />
