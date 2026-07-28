@@ -6,6 +6,9 @@ function Home({ onNavigate, route }) {
   const [activeMember, setActiveMember] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState('Board of Directors');
   const [activeService, setActiveService] = useState(null);
+  const [showNewsDetail, setShowNewsDetail] = useState(false);
+  const [selectedNewsId, setSelectedNewsId] = useState(null);
+  const [shareTooltip, setShareTooltip] = useState(false);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 10);
@@ -43,7 +46,7 @@ function Home({ onNavigate, route }) {
       '[Your Full Name]'
     );
     
-    const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=info@gunee.com&su=${subject}&body=${body}`;
+    const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to= guneebd@gmail.com&su=${subject}&body=${body}`;
     window.open(gmailUrl, '_blank');
   };
 
@@ -319,7 +322,7 @@ function Home({ onNavigate, route }) {
     {
       id: 15,
       name: 'Ms. Tania Rahman',
-      role: 'Consultant',
+      role: 'Advisor',
       category: 'Consultants',
       image: '/images/consultant1.png',
       bio: 'Ms. Tania Rahman is a development consultant specializing in gender and social equity with over 8 years of experience in gender equity, social development, and program management. She has implemented numerous gender-focused development programs.',
@@ -333,7 +336,7 @@ function Home({ onNavigate, route }) {
     {
       id: 16,
       name: 'Mr. Hasan Mahmud',
-      role: 'Consultant',
+      role: 'Advisor',
       category: 'Consultants',
       image: '/images/consultant2.png',
       bio: 'Mr. Hasan Mahmud is a technology consultant specializing in digital transformation with over 7 years of experience in digital transformation, IT strategy, and system architecture. He has led multiple digital transformation projects.',
@@ -466,36 +469,312 @@ function Home({ onNavigate, route }) {
   // ============================================
   // NEWS & EVENTS DATA
   // ============================================
+  const newsData = {
+    'inception-meeting': {
+      id: 'inception-meeting',
+      tag: 'Inception Meeting',
+      title: 'Inception Meeting: Planning for the Gender Center of Excellence for Financial Inclusion',
+      date: 'September 22, 2025',
+      location: 'Dhaka, Bangladesh',
+      heroImage: '/images/1.jpeg',
+      excerpt: 'Gunee Bangladesh Ltd. successfully convened the Inception Meeting for the initiative titled "Planning for the Gender Center of Excellence for Financial Inclusion." The initiative is funded by the Gates Foundation and aims to establish a strong strategic foundation for advancing gender-responsive and inclusive financial systems.',
+      content: `
+        <p><strong>Gunee Bangladesh Ltd.</strong> successfully convened the Inception Meeting for the initiative titled <strong>"Planning for the Gender Center of Excellence for Financial Inclusion."</strong> The initiative is funded by the Gates Foundation and aims to establish a strong strategic foundation for advancing gender-responsive and inclusive financial systems.</p>
+
+        <p>The meeting brought together key stakeholders, experts, and project representatives to discuss the initiative's objectives, proposed approach, scope of work, implementation framework, and expected outcomes. Participants shared valuable perspectives on the existing gender and financial inclusion landscape, institutional priorities, and potential areas of collaboration.</p>
+
+        <p>The discussions helped align stakeholder expectations, refine the project methodology, and identify the key research, consultation, and planning activities required for developing the proposed Gender Center of Excellence for Financial Inclusion.</p>
+
+        <p>The insights gathered during the meeting will guide the subsequent phases of the initiative and support the development of an inclusive, evidence-based, and sustainable institutional framework.</p>
+      `,
+      gallery: [
+        { id: 0, src: '/images/1.jpeg', alt: 'Group discussion' },
+        { id: 1, src: '/images/2.png', alt: 'Presentation' },
+        { id: 2, src: '/images/22.jpg', alt: 'Workshop session' },
+        { id: 3, src: '/images/2222.jpg', alt: 'Stakeholders meeting' },
+        { id: 4, src: '/images/i1.jpg', alt: 'Feedback session' },
+        { id: 5, src: '/images/i2.jpg', alt: 'Collaboration' },
+        { id: 6, src: '/images/i3.jpg', alt: 'Roundtable discussion' },
+        { id: 7, src: '/images/i4.jpg', alt: 'Keynote speech' },
+       
+
+      ],
+      hashtags: ['GenderCenterOfExcellence', 'FinancialInclusion', 'GenderEquality', 'InclusiveFinance', 'InceptionMeeting', 'StakeholderEngagement', 'GuneeBangladesh', 'GatesFoundation', 'GenderResponsiveFinance', 'EconomicEmpowerment']
+    },
+    'inception-workshop': {
+      id: 'inception-workshop',
+      tag: 'Workshop',
+      title: 'Workshop on the Inception Report: Planning for the Gender Center of Excellence for Financial Inclusion',
+      date: 'October 15, 2025',
+      location: 'Dhaka, Bangladesh',
+      heroImage: '/images/2.png',
+      excerpt: 'Gunee Bangladesh Ltd. organized a stakeholder workshop on the Inception Report prepared under the initiative "Planning for the Gender Center of Excellence for Financial Inclusion," funded by the Gates Foundation.',
+      content: `
+        <p><strong>Gunee Bangladesh Ltd.</strong> organized a stakeholder workshop on the Inception Report prepared under the initiative <strong>"Planning for the Gender Center of Excellence for Financial Inclusion,"</strong> funded by the Gates Foundation.</p>
+
+        <p>The workshop provided a collaborative platform to present and review the proposed vision, objectives, methodology, stakeholder engagement approach, work plan, and institutional framework outlined in the Inception Report. Participants contributed valuable feedback on the strategic direction and operational considerations for establishing the Gender Center of Excellence.</p>
+
+        <p>The discussions highlighted the importance of evidence-based research, meaningful stakeholder participation, institutional collaboration, and gender-responsive approaches in addressing the persistent barriers faced by women and underserved groups in accessing and benefiting from financial services.</p>
+
+        <p>The recommendations received during the workshop will be incorporated into the Inception Report and will inform the next stages of planning and development of the Center.</p>
+      `,
+            gallery: [
+        { id: 0, src: '/images/w1.jpg', alt: 'Group discussion' },
+        { id: 1, src: '/images/w2.jpg', alt: 'Presentation' },
+        { id: 2, src: '/images/w3.jpg', alt: 'Workshop session' },
+        { id: 3, src: '/images/w4.jpg', alt: 'Stakeholders meeting' },
+        { id: 4, src: '/images/w5.jpg', alt: 'Feedback session' },
+        { id: 5, src: '/images/w6.jpg', alt: 'Collaboration' },
+        { id: 6, src: '/images/w7.jpg', alt: 'Roundtable discussion' },
+        { id: 7, src: '/images/w8.jpg', alt: 'Keynote speech' }, 
+
+      ],
+
+      hashtags: ['InceptionReport', 'GenderCenterOfExcellence', 'FinancialInclusion', 'InclusiveFinance', 'GenderEquality', 'StakeholderWorkshop', 'GuneeBangladesh', 'GatesFoundation', 'WomenEconomicEmpowerment', 'GenderResponsiveFinance']
+    }
+  };
+
   const newsEvents = [
+
     {
       id: 1,
-      title: 'Gunee Bangladesh Launches New Training Program for Women Entrepreneurs',
-      date: 'June 15, 2026',
-      category: 'Event',
-      image: '/images/news1.jpg',
-      excerpt: 'A new capacity building initiative aimed at empowering women entrepreneurs across Bangladesh with essential business and leadership skills.',
-      link: '#'
+      title: 'Inception Meeting: Planning for the Gender Center of Excellence for Financial Inclusion',
+      date: 'September 22, 2025',
+      category: 'Meeting',
+      image: '/images/1.jpeg',
+      excerpt: 'Gunee Bangladesh Ltd. successfully convened the Inception Meeting for the initiative titled "Planning for the Gender Center of Excellence for Financial Inclusion." The initiative is funded by the Gates Foundation and aims to establish a strong strategic foundation for advancing gender-responsive and inclusive financial systems.',
+      link: '#',
+      newsId: 'inception-meeting'
     },
     {
       id: 2,
-      title: 'Research Report on Financial Inclusion Published',
-      date: 'June 10, 2026',
-      category: 'Publication',
-      image: '/images/news2.jpg',
-      excerpt: 'Our team has released a comprehensive study on gender gap in financial inclusion, highlighting key challenges and recommendations for policy reform.',
-      link: '#'
-    },
-    {
-      id: 3,
-      title: 'Gunee Bangladesh Signs MOU with Leading Development Organization',
-      date: 'June 5, 2026',
-      category: 'Partnership',
-      image: '/images/news3.jpg',
-      excerpt: 'Strategic partnership agreement signed to collaborate on sustainable development projects focusing on gender equity and economic empowerment.',
-      link: '#'
+      title: 'Workshop on the Inception Report: Planning for the Gender Center of Excellence for Financial Inclusion',
+      date: 'October 15, 2025',
+      category: 'Workshop',
+      image: '/images/2.png',
+      excerpt: 'Gunee Bangladesh Ltd. organized a stakeholder workshop on the Inception Report prepared under the initiative "Planning for the Gender Center of Excellence for Financial Inclusion," funded by the Gates Foundation.',
+      link: '#',
+      newsId: 'inception-workshop'
     }
   ];
 
+  // ============================================
+  // SHARE FUNCTIONS
+  // ============================================
+  const shareOnFacebook = (title) => {
+    window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`, '_blank');
+  };
+
+  const shareOnTwitter = (title, hashtags) => {
+    const hashtagString = hashtags ? hashtags.join(',') : '';
+    window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(window.location.href)}&hashtags=${hashtagString}`, '_blank');
+  };
+
+  const shareOnLinkedIn = () => {
+    window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(window.location.href)}`, '_blank');
+  };
+
+  const shareOnWhatsApp = (title) => {
+    window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(title + ' ' + window.location.href)}`, '_blank');
+  };
+
+  const shareViaEmail = (title) => {
+    window.location.href = `mailto:?subject=${encodeURIComponent(title)}&body=${encodeURIComponent(title + '\n\n' + window.location.href)}`;
+  };
+
+  const handlePrint = () => {
+    window.print();
+  };
+
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(window.location.href);
+    setShareTooltip(true);
+    setTimeout(() => setShareTooltip(false), 2000);
+  };
+
+  // Handle news read more - navigate to detail page
+  const handleNewsReadMore = (newsId) => {
+    if (newsId && newsData[newsId]) {
+      setSelectedNewsId(newsId);
+      setShowNewsDetail(true);
+      // Scroll to top when detail opens
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
+  // Handle back from detail - scroll to News & Events section
+  const handleNewsBack = () => {
+    setShowNewsDetail(false);
+    setSelectedNewsId(null);
+    // Wait for state update then scroll to news section
+    setTimeout(() => {
+      const newsSection = document.getElementById('news');
+      if (newsSection) {
+        const offset = 80; // Account for any fixed header
+        const elementPosition = newsSection.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - offset;
+        window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+      }
+    }, 100);
+  };
+
+  // Get current news data
+  const currentNews = selectedNewsId ? newsData[selectedNewsId] : null;
+
+  // If showing news detail, render the detail page
+  if (showNewsDetail && currentNews) {
+    return (
+      <div className="news-detail-wrapper">
+        {/* Hero Section with Background Image */}
+        <section className="news-hero-section" style={{ backgroundImage: `url(${currentNews.heroImage})` }}>
+          <div className="news-hero-overlay"></div>
+          <div className="news-hero-content">
+            {/* Back Button - Left Aligned */}
+            <div className="news-hero-back-wrapper">
+              <button className="news-hero-back" onClick={handleNewsBack}>
+                <span className="news-hero-back-icon">←</span> Back to News
+              </button>
+            </div>
+            
+            <div className="news-hero-center-content">
+              
+              <h1 className="news-hero-title">{currentNews.title}</h1>
+              <div className="news-hero-meta">
+                <span><span className="news-hero-icon">📅</span> {currentNews.date}</span>
+                <span><span className="news-hero-icon">📍</span> {currentNews.location}</span>
+              </div>
+              
+              {/* Share Buttons in Hero */}
+              <div className="news-hero-share">
+                <span className="news-hero-share-label">Share this</span>
+                <div className="news-hero-share-buttons">
+                  <button onClick={() => shareOnFacebook(currentNews.title)} className="news-hero-share-btn facebook" title="Share on Facebook">
+                    <span>f</span>
+                  </button>
+                  <button onClick={() => shareOnTwitter(currentNews.title, currentNews.hashtags)} className="news-hero-share-btn twitter" title="Share on Twitter">
+                    <span>𝕏</span>
+                  </button>
+                  <button onClick={shareOnLinkedIn} className="news-hero-share-btn linkedin" title="Share on LinkedIn">
+                    <span>in</span>
+                  </button>
+                  <button onClick={() => shareOnWhatsApp(currentNews.title)} className="news-hero-share-btn whatsapp" title="Share on WhatsApp">
+                    <span>💬</span>
+                  </button>
+                  <button onClick={() => shareViaEmail(currentNews.title)} className="news-hero-share-btn email" title="Share via Email">
+                    <span>✉</span>
+                  </button>
+                  <button onClick={handlePrint} className="news-hero-share-btn print" title="Print">
+                    <span>🖨</span>
+                  </button>
+                  <div className="news-hero-copy-container">
+                    <button onClick={copyToClipboard} className="news-hero-share-btn copy" title="Copy link">
+                      <span>🔗</span>
+                    </button>
+                    {shareTooltip && <span className="news-hero-copy-tooltip">Copied!</span>}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Detail Content */}
+        <section className="news-detail-body-section">
+          <div className="news-detail-container">
+            <div className="news-detail-content-wrapper">
+              <div className="news-detail-body" dangerouslySetInnerHTML={{ __html: currentNews.content }} />
+
+              {/* Hashtags */}
+              <div className="news-detail-hashtags">
+                {currentNews.hashtags.map((tag, index) => (
+                  <span key={index} className="news-detail-hashtag">#{tag}</span>
+                ))}
+              </div>
+
+              {/* Animated Gallery */}
+              <div className="news-detail-gallery">
+                <div className="news-gallery-label">
+                  <span className="news-gallery-icon">🖼</span> Event Gallery
+                </div>
+                
+                {/* line 1: right → left */}
+                <div className="news-marquee-line">
+                  {[...currentNews.gallery, ...currentNews.gallery, ...currentNews.gallery].map((img, idx) => (
+                    <div className="news-marquee-item" key={`r-${idx}`}>
+                      <img src={img.src} alt={img.alt} loading="lazy" />
+                    </div>
+                  ))}
+                </div>
+
+                {/* line 2: left → right (reverse) */}
+                <div className="news-marquee-line reverse">
+                  {[...currentNews.gallery, ...currentNews.gallery, ...currentNews.gallery].map((img, idx) => (
+                    <div className="news-marquee-item" key={`l-${idx}`}>
+                      <img src={img.src} alt={img.alt} loading="lazy" />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Footer */}
+        <footer className="footer-section">
+          <div className="footer-container">
+            <div className="footer-content">
+              <div className="footer-left">
+                <div className="footer-brand">
+                  <img 
+                    src="/images/logo.png" 
+                    alt="Gunee Bangladesh" 
+                    className="footer-logo" 
+                  />
+                </div>
+              </div>
+
+              <div className="footer-right">
+                <div className="footer-address-row">
+                  <p className="footer-address">
+                    Address: Plot 68-71, Road 4, Rupnagar Industrial Area, Section 2, Mirpur, Dhaka, Bangladesh
+                  </p>
+                </div>
+
+                <div className="footer-links-row">
+                  <div className="footer-links">
+                    <a href="#team" className="footer-link">Meet the Team</a>
+                    <span className="footer-divider">|</span>
+                    <a href="#service" className="footer-link">Explore Our Services</a>
+                  </div>
+                  <div className="footer-social">
+                    <button 
+                      onClick={openGmail}
+                      className="footer-social-link" 
+                      aria-label="Email"
+                    >
+                      ✉️
+                    </button>
+                    <a href="#" className="footer-social-link" aria-label="LinkedIn">
+                      in
+                    </a>
+                    <a href="#" className="footer-social-link" aria-label="Instagram">
+                      📷
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="footer-copyright">
+              <p>&copy; {new Date().getFullYear()} Gunee Bangladesh Limited. All rights reserved.</p>
+            </div>
+          </div>
+        </footer>
+      </div>
+    );
+  }
+
+  // Main page render
   return (
     <>
       {/* ============================================
@@ -587,6 +866,45 @@ function Home({ onNavigate, route }) {
         </div>
       </section>
 
+    
+    {/* ============================================
+    MISSION & VISION SECTION
+    ============================================ */}
+<section className="mission-vision-section">
+  <div className="mission-vision-container">
+    <div className="mission-vision-header">
+      <h2 className="mission-vision-title">
+        <span className="mission-vision-title-line1">Our</span>
+        <span className="mission-vision-title-line2">Mission &amp; Vision</span>
+      </h2>
+    </div>
+
+    <div className="mission-vision-grid">
+      {/* Mission Card - Left */}
+      <div className="mission-vision-card mission-card">
+        <h3 className="mission-vision-card-title">🎯 Our Mission</h3>
+        <p className="mission-vision-card-text">
+          To drive transformative change in Bangladesh through evidence-based research, 
+          innovative training, and strategic consulting that promotes gender equity, 
+          financial inclusion, and sustainable development.
+        </p>
+      </div>
+
+      {/* Vision Card - Right */}
+      <div className="mission-vision-card vision-card">
+        <h3 className="mission-vision-card-title">💡 Our Vision</h3>
+        <p className="mission-vision-card-text">
+          A Bangladesh where every individual, regardless of gender or background, 
+          has equal access to economic opportunities, financial services, and 
+          the tools needed to build a prosperous and sustainable future.
+        </p>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+
       {/* ============================================
           FOCUS AREAS SECTION
           ============================================ */}
@@ -676,46 +994,45 @@ function Home({ onNavigate, route }) {
       {/* ============================================
           SERVICES SECTION - ACCORDION LIST
           ============================================ */}
-      <section className="services-section1">
-        <div className="services-container">
-          <div className="focus-header">
-            <h2 className="focus-title">
-              <span className="focus-title-line1">Our</span>
-              <span className="focus-title-line2">Services</span>
-            </h2>
-          </div>
+<section className="services-section1">
+  <div className="services-container">
+    <div className="focus-header">
+      <h2 className="focus-title">
+        <span className="focus-title-line1">Our</span>
+        <span className="focus-title-line2">Services</span>
+      </h2>
+    </div>
 
-          <div className="services-accordion">
-            {serviceData.map((service, index) => (
-              <div className="service-item" key={service.id}>
-                <div 
-                  className="service-item-header"
-                  onClick={() => toggleService(activeService === index ? null : index)}
-                >
-                  <h3 className="service-item-title">{service.title}</h3>
-                  <button 
-                    className={`service-toggle-btn ${activeService === index ? 'active' : ''}`}
-                    onClick={() => toggleService(activeService === index ? null : index)}
-                    aria-label={`Toggle ${service.title} details`}
-                  >
-                    {activeService === index ? '−' : '+'}
-                  </button>
-                </div>
-                <div className={`service-item-content ${activeService === index ? 'active' : ''}`}>
-                  <p className="service-description">{service.description}</p>
-                  <ul className="service-points">
-                    {service.points.map((point, i) => (
-                      <li className="service-point" key={i}>{point}</li>
-                    ))}
-                  </ul>
-                </div>
-                {index < serviceData.length - 1 && <div className="service-divider"></div>}
-              </div>
-            ))}
+    <div className="services-accordion">
+      {serviceData.map((service, index) => (
+        <div className="service-item" key={service.id}>
+          <div 
+            className="service-item-header"
+            onClick={() => toggleService(activeService === index ? null : index)}
+          >
+            <h3 className="service-item-title">{service.title}</h3>
+            <button 
+              className={`service-toggle-btn ${activeService === index ? 'active' : ''}`}
+              onClick={() => toggleService(activeService === index ? null : index)}
+              aria-label={`Toggle ${service.title} details`}
+            >
+              {activeService === index ? '−' : '+'}
+            </button>
           </div>
+          <div className={`service-item-content ${activeService === index ? 'active' : ''}`}>
+            <p className="service-description">{service.description}</p>
+            <div className="service-points">
+              {service.points.map((point, i) => (
+                <span className="service-point" key={i}>{point}</span>
+              ))}
+            </div>
+          </div>
+          {index < serviceData.length - 1 && <div className="service-divider"></div>}
         </div>
-      </section>
-
+      ))}
+    </div>
+  </div>
+</section>
       {/* ============================================
           TEAM SECTION
           ============================================ */}
@@ -739,13 +1056,7 @@ function Home({ onNavigate, route }) {
               className={`category-tab ${selectedCategory === 'Advisors' ? 'active' : ''}`}
               onClick={() => setSelectedCategory('Advisors')}
             >
-              Advisors
-            </button>
-            <button 
-              className={`category-tab ${selectedCategory === 'Consultants' ? 'active' : ''}`}
-              onClick={() => setSelectedCategory('Consultants')}
-            >
-              Consultants
+             Resource Pool
             </button>
           </div>
 
@@ -893,9 +1204,12 @@ function Home({ onNavigate, route }) {
                   </div>
                   <h3 className="news-card-title">{item.title}</h3>
                   <p className="news-excerpt">{item.excerpt}</p>
-                  <a href={item.link} className="news-read-more">
+                  <button 
+                    className="news-read-more"
+                    onClick={() => handleNewsReadMore(item.newsId || item.id)}
+                  >
                     Read More <span className="news-arrow">→</span>
-                  </a>
+                  </button>
                 </div>
               </div>
             ))}
@@ -939,6 +1253,226 @@ function Home({ onNavigate, route }) {
           </div>
         </div>
       </section>
+      
+
+{/* ============================================
+    CONTACT US SECTION
+    ============================================ */}
+<section className="contact-section" id="contact">
+  <div className="contact-container">
+    <div className="contact-header">
+      <h2 className="contact-title">
+        <span className="contact-title-line1">Get In</span>
+        <span className="contact-title-line2">Touch With Us</span>
+      </h2>
+    </div>
+
+    <div className="contact-grid">
+      {/* Left Side - Contact Information */}
+      <div className="contact-info">
+        <div className="contact-info-card">
+          <h3 className="contact-info-title">Contact Information</h3>
+          
+          {/* Contact Details - Compact */}
+          <div className="contact-info-item">
+            <div className="contact-info-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                <circle cx="12" cy="10" r="3"/>
+              </svg>
+            </div>
+            <div className="contact-info-text">
+              <h4>Address</h4>
+              <p>Plot 68-71, Road 4, Rupnagar Industrial Area, Section 2, Mirpur, Dhaka</p>
+            </div>
+          </div>
+
+          <div className="contact-info-item contact-info-row">
+            <div className="contact-info-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+              </svg>
+            </div>
+            <div className="contact-info-text">
+              <h4>Phone</h4>
+              <p>+880 1712 988 982</p>
+            </div>
+          </div>
+
+          <div className="contact-info-item contact-info-row">
+            <div className="contact-info-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                <polyline points="22,6 12,13 2,6"/>
+              </svg>
+            </div>
+            <div className="contact-info-text">
+              <h4>Email</h4>
+              <p> guneebd@gmail.com</p>
+            </div>
+          </div>
+
+          <div className="contact-info-item">
+            <div className="contact-info-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+              </svg>
+            </div>
+            <div className="contact-info-text">
+              <h4>Working Hours</h4>
+              <p>Sun - Thu: 9:00 AM - 6:00 PM</p>
+            </div>
+          </div>
+
+          <div className="contact-social-links">
+            <div className="contact-social-icons">
+              <a href="#" className="contact-social-icon" aria-label="Facebook">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                </svg>
+              </a>
+              <a href="#" className="contact-social-icon" aria-label="Twitter">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                </svg>
+              </a>
+              <a href="#" className="contact-social-icon" aria-label="LinkedIn">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                </svg>
+              </a>
+              <a href="#" className="contact-social-icon" aria-label="YouTube">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                </svg>
+              </a>
+            </div>
+          </div>
+
+          {/* Google Map - Below Contact Information */}
+          <div className="contact-map-wrapper">
+            <div className="contact-map-container">
+              <iframe 
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3650.199902152171!2d90.35549427353867!3d23.81148958643171!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3755c15fb6bce8d7%3A0x207f30ae9ebec5f3!2zQ29udmluY2UgR3JvdXAg4KaV4Kao4Kat4Ka_4Kao4KeN4Ka4IOCml-CnjeCmsOCngeCmqg!5e0!3m2!1sen!2sbd!4v1785236251024!5m2!1sen!2sbd" 
+                width="100%" 
+                height="140" 
+                style={{ border: 0, borderRadius: '10px' }}
+                allowFullScreen 
+                loading="lazy" 
+                referrerPolicy="no-referrer-when-downgrade"
+                title="Gunee Bangladesh Office Location"
+              ></iframe>
+            </div>
+            <div className="contact-map-actions">
+              <a 
+                href="https://maps.google.com/maps?q=Plot+68-71,+Road+4,+Rupnagar+Industrial+Area,+Section+2,+Mirpur,+Dhaka" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="contact-map-btn"
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                  <circle cx="12" cy="10" r="3"/>
+                </svg>
+                <span>Directions</span>
+              </a>
+              <a 
+                href="https://www.google.com/maps/place/Plot+68-71,+Road+4,+Rupnagar+Industrial+Area,+Section+2,+Mirpur,+Dhaka" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="contact-map-btn"
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="15 3 21 3 21 9"/>
+                  <polyline points="9 21 3 21 3 15"/>
+                  <line x1="21" y1="3" x2="14" y2="10"/>
+                  <line x1="3" y1="21" x2="10" y2="14"/>
+                </svg>
+                <span>Open Maps</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Right Side - Contact Form */}
+      <div className="contact-form-wrapper">
+        <div className="contact-form-card">
+          <h3 className="contact-form-title">Send Us a Message</h3>
+          <p className="contact-form-subtitle">Fill out the form below and we'll get back to you shortly.</p>
+          
+          <form className="contact-form" onSubmit={(e) => e.preventDefault()}>
+            <div className="contact-form-row">
+              <div className="contact-form-group">
+                <label htmlFor="fullName">Full Name <span className="required">*</span></label>
+                <input 
+                  type="text" 
+                  id="fullName" 
+                  placeholder="Enter your full name"
+                  className="contact-form-input"
+                  required
+                />
+              </div>
+              <div className="contact-form-group">
+                <label htmlFor="email">Email Address <span className="required">*</span></label>
+                <input 
+                  type="email" 
+                  id="email" 
+                  placeholder="Enter your email address"
+                  className="contact-form-input"
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="contact-form-row">
+              <div className="contact-form-group">
+                <label htmlFor="phone">Phone Number</label>
+                <input 
+                  type="tel" 
+                  id="phone" 
+                  placeholder="Enter your phone number"
+                  className="contact-form-input"
+                />
+              </div>
+              <div className="contact-form-group">
+                <label htmlFor="subject">Subject <span className="required">*</span></label>
+                <input 
+                  type="text" 
+                  id="subject" 
+                  placeholder="Enter message subject"
+                  className="contact-form-input"
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="contact-form-group">
+              <label htmlFor="message">Message <span className="required">*</span></label>
+              <textarea 
+                id="message" 
+                rows="3" 
+                placeholder="Type your message here..."
+                className="contact-form-textarea"
+                required
+              ></textarea>
+            </div>
+
+            <button type="submit" className="contact-form-submit">
+              <span>Send Message</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="22" y1="2" x2="11" y2="13"/>
+                <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+              </svg>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+      
 
       {/* ============================================
           FOOTER SECTION
