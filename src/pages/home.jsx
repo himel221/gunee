@@ -10,14 +10,40 @@ function Home({ onNavigate, route }) {
   const [selectedNewsId, setSelectedNewsId] = useState(null);
   const [shareTooltip, setShareTooltip] = useState(false);
 
+  // Focus Areas carousel state
+  const [focusIndex, setFocusIndex] = useState(0);
+
+  // Team carousel state
+  const [teamIndex, setTeamIndex] = useState(0);
+
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 10);
     onScroll();
-
     window.addEventListener('scroll', onScroll, { passive: true });
-
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
+
+  // ✅ Lock body scroll when modal is open
+  useEffect(() => {
+    if (activeMember !== null) {
+      const originalOverflow = document.body.style.overflow;
+      const originalPaddingRight = document.body.style.paddingRight;
+
+      // Prevent layout shift from scrollbar disappearing
+      const scrollbarWidth =
+        window.innerWidth - document.documentElement.clientWidth;
+
+      document.body.style.overflow = 'hidden';
+      if (scrollbarWidth > 0) {
+        document.body.style.paddingRight = `${scrollbarWidth}px`;
+      }
+
+      return () => {
+        document.body.style.overflow = originalOverflow;
+        document.body.style.paddingRight = originalPaddingRight;
+      };
+    }
+  }, [activeMember]);
 
   const toggleMember = (index) => {
     setActiveMember(activeMember === index ? null : index);
@@ -45,7 +71,6 @@ function Home({ onNavigate, route }) {
       'Best regards,\n' +
       '[Your Full Name]'
     );
-    
     const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to= guneebd@gmail.com&su=${subject}&body=${body}`;
     window.open(gmailUrl, '_blank');
   };
@@ -103,16 +128,15 @@ function Home({ onNavigate, route }) {
   ];
 
   // ============================================
-  // TEAM MEMBERS DATA (Full List)
+  // TEAM MEMBERS DATA
   // ============================================
   const teamMembers = [
-    // Board of Directors (id: 0-4)
     {
       id: 0,
       name: 'Rafez Alam Chowdhury',
       role: 'Chairman',
       category: 'Board of Directors',
-      image: '/images/rafez.png',
+      image: '/images/rafez.jpg',
       bio: 'Rafez Alam Chowdhury is the visionary Chairman of Gunee Bangladesh Limited. With a distinguished career spanning over two decades in policy research, gender studies, and socio-economic development, he has been instrumental in shaping the organization\'s strategic direction. His leadership has been pivotal in driving impactful initiatives across Bangladesh, particularly in the areas of financial inclusion, gender equity, and sustainable development. He previously served as a senior researcher at Dhaka University and has consulted for numerous international development organizations. His commitment to excellence and innovation continues to inspire the entire team, making Gunee Bangladesh a beacon of transformative change in the country.',
       details: {
         expertise: 'Policy Research, Gender Studies, Socio-Economic Development',
@@ -168,7 +192,7 @@ function Home({ onNavigate, route }) {
       name: 'Arif Jawad Siam',
       role: 'Director',
       category: 'Board of Directors',
-      image: '/images/arif.png',
+      image: '/images/arif.jpg',
       bio: 'Arif Jawad Siam is an environmental policy expert and Director at Gunee Bangladesh Limited, dedicated to advancing sustainability and climate action. He holds a Master\'s degree in Environmental Science from BUET and has over 6 years of experience in environmental research and consulting. Arif has worked extensively on climate change adaptation, environmental impact assessments, and sustainable development initiatives across Bangladesh. His work has contributed to shaping environmental policies and strategies for both government and non-government organizations. He is passionate about building a greener future and has been actively involved in community-based environmental awareness programs, making significant contributions to environmental conservation and sustainable development in the region.',
       details: {
         expertise: 'Environmental Policy, Sustainability, Climate Change',
@@ -177,7 +201,6 @@ function Home({ onNavigate, route }) {
       },
       cv: '/cvs/arif.pdf'
     },
-    // Advisors (id: 5-14)
     {
       id: 5,
       name: 'Dr. Mohammad Ali',
@@ -318,7 +341,6 @@ function Home({ onNavigate, route }) {
       },
       cv: '/cvs/advisor10.pdf'
     },
-    // Consultants (id: 15-24)
     {
       id: 15,
       name: 'Ms. Tania Rahman',
@@ -467,6 +489,95 @@ function Home({ onNavigate, route }) {
   };
 
   // ============================================
+  // FOCUS AREAS DATA
+  // ============================================
+  const focusAreas = [
+    {
+      img: '/images/gender.png',
+      alt: 'Gender & Social Equity',
+      title: <>Gender &amp; Social Equity</>,
+      description: 'Promoting equality and social justice through inclusive policies and programs'
+    },
+    {
+      img: '/images/money.png',
+      alt: 'Economics & Finance',
+      title: <>Economics &amp; Finance</>,
+      description: 'Driving economic growth and financial inclusion through strategic solutions'
+    },
+    {
+      img: '/images/ET.png',
+      alt: 'Engineering & Technology',
+      title: <>Engineering &amp; Technology</>,
+      description: 'Leveraging innovation and technical expertise for sustainable development'
+    },
+    {
+      img: '/images/mc.png',
+      alt: 'Media & Communication',
+      title: <>Media &amp; Communication</>,
+      description: 'Amplifying voices and shaping narratives through strategic communication'
+    },
+    {
+      img: '/images/environment.jpg',
+      alt: 'Environment & Sustainability',
+      title: <>Environment &amp; Sustainability</>,
+      description: 'Building a greener future through environmental stewardship and sustainable practices'
+    }
+  ];
+
+  const focusTotal = focusAreas.length;
+  const focusPrev = () => setFocusIndex((i) => (i === 0 ? focusTotal - 1 : i - 1));
+  const focusNext = () => setFocusIndex((i) => (i === focusTotal - 1 ? 0 : i + 1));
+
+  // ============================================
+  // TEAM CAROUSEL — continuous with auto category switch
+  // ============================================
+  const categoryOrder = ['Board of Directors', 'Advisors'];
+  const filteredMembers = getFilteredMembers();
+  const teamTotal = filteredMembers.length;
+
+  const handleCategoryChange = (category) => {
+    setSelectedCategory(category);
+    setTeamIndex(0);
+  };
+
+  const teamPrev = () => {
+    const members = getFilteredMembers();
+    const total = members.length;
+    const currentCategoryIndex = categoryOrder.indexOf(selectedCategory);
+
+    if (teamIndex === 0) {
+      const prevCategoryIndex =
+        currentCategoryIndex === 0
+          ? categoryOrder.length - 1
+          : currentCategoryIndex - 1;
+      const prevCategory = categoryOrder[prevCategoryIndex];
+      const prevMembers = teamMembers.filter((m) => m.category === prevCategory);
+      setSelectedCategory(prevCategory);
+      setTeamIndex(prevMembers.length - 1);
+    } else {
+      setTeamIndex((i) => i - 1);
+    }
+  };
+
+  const teamNext = () => {
+    const members = getFilteredMembers();
+    const total = members.length;
+    const currentCategoryIndex = categoryOrder.indexOf(selectedCategory);
+
+    if (teamIndex === total - 1) {
+      const nextCategoryIndex =
+        currentCategoryIndex === categoryOrder.length - 1
+          ? 0
+          : currentCategoryIndex + 1;
+      const nextCategory = categoryOrder[nextCategoryIndex];
+      setSelectedCategory(nextCategory);
+      setTeamIndex(0);
+    } else {
+      setTeamIndex((i) => i + 1);
+    }
+  };
+
+  // ============================================
   // NEWS & EVENTS DATA
   // ============================================
   const newsData = {
@@ -496,8 +607,6 @@ function Home({ onNavigate, route }) {
         { id: 5, src: '/images/i2.jpg', alt: 'Collaboration' },
         { id: 6, src: '/images/i3.jpg', alt: 'Roundtable discussion' },
         { id: 7, src: '/images/i4.jpg', alt: 'Keynote speech' },
-       
-
       ],
       hashtags: ['GenderCenterOfExcellence', 'FinancialInclusion', 'GenderEquality', 'InclusiveFinance', 'InceptionMeeting', 'StakeholderEngagement', 'GuneeBangladesh', 'GatesFoundation', 'GenderResponsiveFinance', 'EconomicEmpowerment']
     },
@@ -518,7 +627,7 @@ function Home({ onNavigate, route }) {
 
         <p>The recommendations received during the workshop will be incorporated into the Inception Report and will inform the next stages of planning and development of the Center.</p>
       `,
-            gallery: [
+      gallery: [
         { id: 0, src: '/images/w1.jpg', alt: 'Group discussion' },
         { id: 1, src: '/images/w2.jpg', alt: 'Presentation' },
         { id: 2, src: '/images/w3.jpg', alt: 'Workshop session' },
@@ -526,16 +635,13 @@ function Home({ onNavigate, route }) {
         { id: 4, src: '/images/w5.jpg', alt: 'Feedback session' },
         { id: 5, src: '/images/w6.jpg', alt: 'Collaboration' },
         { id: 6, src: '/images/w7.jpg', alt: 'Roundtable discussion' },
-        { id: 7, src: '/images/w8.jpg', alt: 'Keynote speech' }, 
-
+        { id: 7, src: '/images/w8.jpg', alt: 'Keynote speech' },
       ],
-
       hashtags: ['InceptionReport', 'GenderCenterOfExcellence', 'FinancialInclusion', 'InclusiveFinance', 'GenderEquality', 'StakeholderWorkshop', 'GuneeBangladesh', 'GatesFoundation', 'WomenEconomicEmpowerment', 'GenderResponsiveFinance']
     }
   };
 
   const newsEvents = [
-
     {
       id: 1,
       title: 'Inception Meeting: Planning for the Gender Center of Excellence for Financial Inclusion',
@@ -592,25 +698,21 @@ function Home({ onNavigate, route }) {
     setTimeout(() => setShareTooltip(false), 2000);
   };
 
-  // Handle news read more - navigate to detail page
   const handleNewsReadMore = (newsId) => {
     if (newsId && newsData[newsId]) {
       setSelectedNewsId(newsId);
       setShowNewsDetail(true);
-      // Scroll to top when detail opens
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
 
-  // Handle back from detail - scroll to News & Events section
   const handleNewsBack = () => {
     setShowNewsDetail(false);
     setSelectedNewsId(null);
-    // Wait for state update then scroll to news section
     setTimeout(() => {
       const newsSection = document.getElementById('news');
       if (newsSection) {
-        const offset = 80; // Account for any fixed header
+        const offset = 80;
         const elementPosition = newsSection.getBoundingClientRect().top;
         const offsetPosition = elementPosition + window.pageYOffset - offset;
         window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
@@ -618,58 +720,36 @@ function Home({ onNavigate, route }) {
     }, 100);
   };
 
-  // Get current news data
   const currentNews = selectedNewsId ? newsData[selectedNewsId] : null;
 
-  // If showing news detail, render the detail page
   if (showNewsDetail && currentNews) {
     return (
       <div className="news-detail-wrapper">
-        {/* Hero Section with Background Image */}
         <section className="news-hero-section" style={{ backgroundImage: `url(${currentNews.heroImage})` }}>
           <div className="news-hero-overlay"></div>
           <div className="news-hero-content">
-            {/* Back Button - Left Aligned */}
             <div className="news-hero-back-wrapper">
               <button className="news-hero-back" onClick={handleNewsBack}>
                 <span className="news-hero-back-icon">←</span> Back to News
               </button>
             </div>
-            
             <div className="news-hero-center-content">
-              
               <h1 className="news-hero-title">{currentNews.title}</h1>
               <div className="news-hero-meta">
                 <span><span className="news-hero-icon">📅</span> {currentNews.date}</span>
                 <span><span className="news-hero-icon">📍</span> {currentNews.location}</span>
               </div>
-              
-              {/* Share Buttons in Hero */}
               <div className="news-hero-share">
                 <span className="news-hero-share-label">Share this</span>
                 <div className="news-hero-share-buttons">
-                  <button onClick={() => shareOnFacebook(currentNews.title)} className="news-hero-share-btn facebook" title="Share on Facebook">
-                    <span>f</span>
-                  </button>
-                  <button onClick={() => shareOnTwitter(currentNews.title, currentNews.hashtags)} className="news-hero-share-btn twitter" title="Share on Twitter">
-                    <span>𝕏</span>
-                  </button>
-                  <button onClick={shareOnLinkedIn} className="news-hero-share-btn linkedin" title="Share on LinkedIn">
-                    <span>in</span>
-                  </button>
-                  <button onClick={() => shareOnWhatsApp(currentNews.title)} className="news-hero-share-btn whatsapp" title="Share on WhatsApp">
-                    <span>💬</span>
-                  </button>
-                  <button onClick={() => shareViaEmail(currentNews.title)} className="news-hero-share-btn email" title="Share via Email">
-                    <span>✉</span>
-                  </button>
-                  <button onClick={handlePrint} className="news-hero-share-btn print" title="Print">
-                    <span>🖨</span>
-                  </button>
+                  <button onClick={() => shareOnFacebook(currentNews.title)} className="news-hero-share-btn facebook" title="Share on Facebook"><span>f</span></button>
+                  <button onClick={() => shareOnTwitter(currentNews.title, currentNews.hashtags)} className="news-hero-share-btn twitter" title="Share on Twitter"><span>𝕏</span></button>
+                  <button onClick={shareOnLinkedIn} className="news-hero-share-btn linkedin" title="Share on LinkedIn"><span>in</span></button>
+                  <button onClick={() => shareOnWhatsApp(currentNews.title)} className="news-hero-share-btn whatsapp" title="Share on WhatsApp"><span>💬</span></button>
+                  <button onClick={() => shareViaEmail(currentNews.title)} className="news-hero-share-btn email" title="Share via Email"><span>✉</span></button>
+                  <button onClick={handlePrint} className="news-hero-share-btn print" title="Print"><span>🖨</span></button>
                   <div className="news-hero-copy-container">
-                    <button onClick={copyToClipboard} className="news-hero-share-btn copy" title="Copy link">
-                      <span>🔗</span>
-                    </button>
+                    <button onClick={copyToClipboard} className="news-hero-share-btn copy" title="Copy link"><span>🔗</span></button>
                     {shareTooltip && <span className="news-hero-copy-tooltip">Copied!</span>}
                   </div>
                 </div>
@@ -678,26 +758,19 @@ function Home({ onNavigate, route }) {
           </div>
         </section>
 
-        {/* Detail Content */}
         <section className="news-detail-body-section">
           <div className="news-detail-container">
             <div className="news-detail-content-wrapper">
               <div className="news-detail-body" dangerouslySetInnerHTML={{ __html: currentNews.content }} />
-
-              {/* Hashtags */}
               <div className="news-detail-hashtags">
                 {currentNews.hashtags.map((tag, index) => (
                   <span key={index} className="news-detail-hashtag">#{tag}</span>
                 ))}
               </div>
-
-              {/* Animated Gallery */}
               <div className="news-detail-gallery">
                 <div className="news-gallery-label">
                   <span className="news-gallery-icon">🖼</span> Event Gallery
                 </div>
-                
-                {/* line 1: right → left */}
                 <div className="news-marquee-line">
                   {[...currentNews.gallery, ...currentNews.gallery, ...currentNews.gallery].map((img, idx) => (
                     <div className="news-marquee-item" key={`r-${idx}`}>
@@ -705,8 +778,6 @@ function Home({ onNavigate, route }) {
                     </div>
                   ))}
                 </div>
-
-                {/* line 2: left → right (reverse) */}
                 <div className="news-marquee-line reverse">
                   {[...currentNews.gallery, ...currentNews.gallery, ...currentNews.gallery].map((img, idx) => (
                     <div className="news-marquee-item" key={`l-${idx}`}>
@@ -719,27 +790,20 @@ function Home({ onNavigate, route }) {
           </div>
         </section>
 
-        {/* Footer */}
         <footer className="footer-section">
           <div className="footer-container">
             <div className="footer-content">
               <div className="footer-left">
                 <div className="footer-brand">
-                  <img 
-                    src="/images/logo.png" 
-                    alt="Gunee Bangladesh" 
-                    className="footer-logo" 
-                  />
+                  <img src="/images/logo.png" alt="Gunee Bangladesh" className="footer-logo" />
                 </div>
               </div>
-
               <div className="footer-right">
                 <div className="footer-address-row">
                   <p className="footer-address">
                     Address: Plot 68-71, Road 4, Rupnagar Industrial Area, Section 2, Mirpur, Dhaka, Bangladesh
                   </p>
                 </div>
-
                 <div className="footer-links-row">
                   <div className="footer-links">
                     <a href="#team" className="footer-link">Meet the Team</a>
@@ -747,24 +811,13 @@ function Home({ onNavigate, route }) {
                     <a href="#service" className="footer-link">Explore Our Services</a>
                   </div>
                   <div className="footer-social">
-                    <button 
-                      onClick={openGmail}
-                      className="footer-social-link" 
-                      aria-label="Email"
-                    >
-                      ✉️
-                    </button>
-                    <a href="#" className="footer-social-link" aria-label="LinkedIn">
-                      in
-                    </a>
-                    <a href="#" className="footer-social-link" aria-label="Instagram">
-                      📷
-                    </a>
+                    <button onClick={openGmail} className="footer-social-link" aria-label="Email">✉️</button>
+                    <a href="#" className="footer-social-link" aria-label="LinkedIn">in</a>
+                    <a href="#" className="footer-social-link" aria-label="Instagram">📷</a>
                   </div>
                 </div>
               </div>
             </div>
-
             <div className="footer-copyright">
               <p>&copy; {new Date().getFullYear()} Gunee Bangladesh Limited. All rights reserved.</p>
             </div>
@@ -774,90 +827,49 @@ function Home({ onNavigate, route }) {
     );
   }
 
-  // Main page render
   return (
     <>
-      {/* ============================================
-          HERO SECTION
-          ============================================ */}
+      {/* HERO SECTION */}
       <section className="hero-section">
         <div className="hero-bg-container">
-          <video 
-            src="/images/bg.mp4" 
-            className="hero-bg-image"
-            autoPlay
-            loop
-            muted
-            playsInline
-          />
+          <video src="/images/bg.mp4" className="hero-bg-image" autoPlay loop muted playsInline />
         </div>
-        
         <div className="hero-overlay"></div>
-        
         <div className="hero-logo">
           <a href="#hero" className="logo-wrap">
             <div className="logo-icon">
-              <img 
-                src="/images/logo1.png" 
-                alt="Gunee Bangladesh Logo"
-                className="logo-img"
-              />
+              <img src="/images/logo1.png" alt="Gunee Bangladesh Logo" className="logo-img" />
             </div>
           </a>
         </div>
-
         <div className="hero-content">
           <h3 className="hero-title">
             <span className="title-line1">Transforming Bangladesh through</span>
             <span className="title-line2">Expertise, Innovation, and Equity</span>
           </h3>
-          
           <div className="cards-container">
             <div className="card-wrapper">
               <div className="card-image-wrapper">
-                <img 
-                  src="/images/research1.png" 
-                  alt="Research"
-                  className="card-image"
-                />
+                <img src="/images/research1.png" alt="Research" className="card-image" />
               </div>
-              <div className="card">
-                <h3 className="card-title">Research</h3>
-              </div>
+              <div className="card"><h3 className="card-title">Research</h3></div>
             </div>
-            
             <div className="card-wrapper">
               <div className="card-image-wrapper">
-                <img 
-                  src="/images/training1.png" 
-                  alt="Training"
-                  className="card-image"
-                />
+                <img src="/images/training1.png" alt="Training" className="card-image" />
               </div>
-              <div className="card">
-                <h3 className="card-title">Training</h3>
-              </div>
+              <div className="card"><h3 className="card-title">Training</h3></div>
             </div>
-            
             <div className="card-wrapper">
               <div className="card-image-wrapper">
-                <img 
-                  src="/images/cons1.png" 
-                  alt="Consulting"
-                  className="card-image"
-                />
+                <img src="/images/cons1.png" alt="Consulting" className="card-image" />
               </div>
-              <div className="card">
-                <h3 className="card-title">Consulting</h3>
-              </div>
+              <div className="card"><h3 className="card-title">Consulting</h3></div>
             </div>
           </div>
-
           <div className="excellence-container">
             <div className="excellence-content">
-              <h2 className="excellence-title-single">
-                Born from Excellence, Built for Impact.
-              </h2>
+              <h2 className="excellence-title-single">Born from Excellence, Built for Impact.</h2>
               <p className="excellence-description">
                 Gunee Bangladesh Limited is a new initiative powered by experts previously hailing from Dhaka University, Bangladesh Bank, and BUET. Our team has delivered impact across sectors including gender, economics, and technology – nationally and globally.
               </p>
@@ -866,309 +878,218 @@ function Home({ onNavigate, route }) {
         </div>
       </section>
 
-    
-    {/* ============================================
-    MISSION & VISION SECTION
-    ============================================ */}
-<section className="mission-vision-section">
-  <div className="mission-vision-container">
-    <div className="mission-vision-header">
-      <h2 className="mission-vision-title">
-        <span className="mission-vision-title-line1">Our</span>
-        <span className="mission-vision-title-line2">Mission &amp; Vision</span>
-      </h2>
-    </div>
-
-    <div className="mission-vision-grid">
-      {/* Mission Card - Left */}
-      <div className="mission-vision-card mission-card">
-        <h3 className="mission-vision-card-title">🎯 Our Mission</h3>
-        <p className="mission-vision-card-text">
-          To drive transformative change in Bangladesh through evidence-based research, 
-          innovative training, and strategic consulting that promotes gender equity, 
-          financial inclusion, and sustainable development.
-        </p>
-      </div>
-
-      {/* Vision Card - Right */}
-      <div className="mission-vision-card vision-card">
-        <h3 className="mission-vision-card-title">💡 Our Vision</h3>
-        <p className="mission-vision-card-text">
-          A Bangladesh where every individual, regardless of gender or background, 
-          has equal access to economic opportunities, financial services, and 
-          the tools needed to build a prosperous and sustainable future.
-        </p>
-
-      </div>
-    </div>
-  </div>
-</section>
-
-
-      {/* ============================================
-          FOCUS AREAS SECTION
-          ============================================ */}
-      <section className="focus-areas-section">
-        <div className="focus-areas-container">
-          <div className="focus-header">
-            <h2 className="focus-title">
-              <span className="focus-title-line1">Our</span>
-              <span className="focus-title-line2">Focus Areas</span>
+      {/* MISSION & VISION */}
+      <section className="mission-vision-section">
+        <div className="mission-vision-container">
+          <div className="mission-vision-header">
+            <h2 className="mission-vision-title">
+              <span className="mission-vision-title-line1">Our</span>
+              <span className="mission-vision-title-line2">Mission &amp; Vision</span>
             </h2>
           </div>
-
-          <div className="focus-grid">
-            <div className="focus-card">
-              <div className="focus-image-wrapper">
-                <img 
-                  src="/images/gender.png" 
-                  alt="Gender & Social Equity"
-                  className="focus-card-image"
-                />
-              </div>
-              <h3 className="focus-card-title">Gender &amp;<br />Social Equity</h3>
-              <p className="focus-card-description">
-                Promoting equality and social justice through inclusive policies and programs
+          <div className="mission-vision-grid">
+            <div className="mission-vision-card mission-card">
+              <h3 className="mission-vision-card-title">🎯 Our Mission</h3>
+              <p className="mission-vision-card-text">
+                To drive transformative change in Bangladesh through evidence-based research, innovative training, and strategic consulting that promotes gender equity, financial inclusion, and sustainable development.
               </p>
             </div>
-
-            <div className="focus-card">
-              <div className="focus-image-wrapper">
-                <img 
-                  src="/images/money.png" 
-                  alt="Economics & Finance"
-                  className="focus-card-image"
-                />
-              </div>
-              <h3 className="focus-card-title">Economics &amp;<br />Finance</h3>
-              <p className="focus-card-description">
-                Driving economic growth and financial inclusion through strategic solutions
-              </p>
-            </div>
-
-            <div className="focus-card">
-              <div className="focus-image-wrapper">
-                <img 
-                  src="/images/ET.png" 
-                  alt="Engineering & Technology"
-                  className="focus-card-image"
-                />
-              </div>
-              <h3 className="focus-card-title">Engineering &amp;<br />Technology</h3>
-              <p className="focus-card-description">
-                Leveraging innovation and technical expertise for sustainable development
-              </p>
-            </div>
-
-            <div className="focus-card">
-              <div className="focus-image-wrapper">
-                <img 
-                  src="/images/mc.png" 
-                  alt="Media & Communication"
-                  className="focus-card-image"
-                />
-              </div>
-              <h3 className="focus-card-title">Media &amp;<br />Communication</h3>
-              <p className="focus-card-description">
-                Amplifying voices and shaping narratives through strategic communication
-              </p>
-            </div>
-
-            <div className="focus-card">
-              <div className="focus-image-wrapper">
-                <img 
-                  src="/images/environment.jpg" 
-                  alt="Environment & Sustainability"
-                  className="focus-card-image"
-                />
-              </div>
-              <h3 className="focus-card-title">Environment &amp;<br />Sustainability</h3>
-              <p className="focus-card-description">
-                Building a greener future through environmental stewardship and sustainable practices
+            <div className="mission-vision-card vision-card">
+              <h3 className="mission-vision-card-title">💡 Our Vision</h3>
+              <p className="mission-vision-card-text">
+                A Bangladesh where every individual, regardless of gender or background, has equal access to economic opportunities, financial services, and the tools needed to build a prosperous and sustainable future.
               </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ============================================
-          SERVICES SECTION - ACCORDION LIST
-          ============================================ */}
-<section className="services-section1">
-  <div className="services-container">
-    <div className="focus-header">
-      <h2 className="focus-title">
-        <span className="focus-title-line1">Our</span>
-        <span className="focus-title-line2">Services</span>
-      </h2>
-    </div>
-
-    <div className="services-accordion">
-      {serviceData.map((service, index) => (
-        <div className="service-item" key={service.id}>
-          <div 
-            className="service-item-header"
-            onClick={() => toggleService(activeService === index ? null : index)}
-          >
-            <h3 className="service-item-title">{service.title}</h3>
-            <button 
-              className={`service-toggle-btn ${activeService === index ? 'active' : ''}`}
-              onClick={() => toggleService(activeService === index ? null : index)}
-              aria-label={`Toggle ${service.title} details`}
-            >
-              {activeService === index ? '−' : '+'}
-            </button>
+      {/* FOCUS AREAS */}
+      <section className="focus-areas-section">
+        <div className="focus-areas-container">
+          <div className="focus-header-row">
+            <h2 className="focus-title">
+              <span className="focus-title-line1">Our</span>{' '}
+              <span className="focus-title-line2">Focus Areas</span>
+            </h2>
+            <div className="focus-header-arrows">
+              <button type="button" className="focus-nav-arrow prev" onClick={focusPrev} aria-label="Previous focus area">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="15 18 9 12 15 6" />
+                </svg>
+              </button>
+              <button type="button" className="focus-nav-arrow next" onClick={focusNext} aria-label="Next focus area">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="9 18 15 12 9 6" />
+                </svg>
+              </button>
+            </div>
           </div>
-          <div className={`service-item-content ${activeService === index ? 'active' : ''}`}>
-            <p className="service-description">{service.description}</p>
-            <div className="service-points">
-              {service.points.map((point, i) => (
-                <span className="service-point" key={i}>{point}</span>
+          <div className="focus-carousel-wrapper">
+            <div className="focus-grid" style={{ transform: `translateX(-${focusIndex * 100}%)` }}>
+              {focusAreas.map((area, index) => (
+                <div key={index} className={`focus-card ${index === focusIndex ? 'active' : ''}`}>
+                  <div className="focus-image-wrapper">
+                    <img src={area.img} alt={area.alt} className="focus-card-image" />
+                  </div>
+                  <div className="focus-card-content">
+                    <h3 className="focus-card-title">{area.title}</h3>
+                    <p className="focus-card-description">{area.description}</p>
+                  </div>
+                </div>
               ))}
             </div>
           </div>
-          {index < serviceData.length - 1 && <div className="service-divider"></div>}
+          <div className="focus-dots">
+            {focusAreas.map((_, index) => (
+              <button key={index} type="button" className={`focus-dot ${index === focusIndex ? 'active' : ''}`} onClick={() => setFocusIndex(index)} aria-label={`Go to focus area ${index + 1}`} />
+            ))}
+          </div>
         </div>
-      ))}
-    </div>
-  </div>
-</section>
-      {/* ============================================
-          TEAM SECTION
-          ============================================ */}
-      <section className="team-section" id="team">
-        <div className="team-container">
-          <div className="team-header">
-            <h2 className="team-title">
-              <span className="team-title-line1">Meet</span>
-              <span className="team-title-line2">Our Team</span>
+      </section>
+
+      {/* SERVICES SECTION */}
+      <section className="services-section1">
+        <div className="services-container">
+          <div className="services-header">
+            <h2 className="services-title">
+              <span className="services-title-line1">Our</span>
+              <span className="services-title-line2">Services</span>
             </h2>
           </div>
-
-          <div className="team-category-tabs">
-            <button 
-              className={`category-tab ${selectedCategory === 'Board of Directors' ? 'active' : ''}`}
-              onClick={() => setSelectedCategory('Board of Directors')}
-            >
-              Board of Directors
-            </button>
-            <button 
-              className={`category-tab ${selectedCategory === 'Advisors' ? 'active' : ''}`}
-              onClick={() => setSelectedCategory('Advisors')}
-            >
-             Resource Pool
-            </button>
-          </div>
-
-          <div className="team-grid">
-            {getFilteredMembers().map((member) => (
-              <div 
-                key={member.id}
-                className="team-member" 
-                onClick={() => toggleMember(member.id)}
-              >
-                <div className="team-member-image">
-                  <img src={member.image} alt={member.name} />
-                  <div className="team-member-overlay">
-                    <span className="view-details">View Details</span>
+          <div className="services-accordion">
+            {serviceData.map((service, index) => (
+              <div className="service-item" key={service.id}>
+                <div className="service-item-header" onClick={() => toggleService(activeService === index ? null : index)}>
+                  <h3 className="service-item-title">{service.title}</h3>
+                  <button className={`service-toggle-btn ${activeService === index ? 'active' : ''}`} onClick={() => toggleService(activeService === index ? null : index)} aria-label={`Toggle ${service.title} details`}>
+                    {activeService === index ? '−' : '+'}
+                  </button>
+                </div>
+                <div className={`service-item-content ${activeService === index ? 'active' : ''}`}>
+                  <p className="service-description">{service.description}</p>
+                  <div className="service-points">
+                    {service.points.map((point, i) => (
+                      <span className="service-point" key={i}>{point}</span>
+                    ))}
                   </div>
                 </div>
-                <h3 className="team-member-name">{member.name}</h3>
-                <p className="team-member-role">{member.role}</p>
+                {index < serviceData.length - 1 && <div className="service-divider"></div>}
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ============================================
-          TEAM MODAL
-          ============================================ */}
-      <div 
-        className={`team-member-modal ${activeMember !== null ? 'active' : ''}`} 
+      {/* TEAM SECTION */}
+      <section className="team-section" id="team">
+        <div className="team-container">
+
+          <div className="team-header-row">
+            <h2 className="team-title">
+              <span className="team-title-line1">Meet</span>
+              <span className="team-title-line2">Our Team</span>
+            </h2>
+            <div className="team-header-arrows">
+              <button type="button" className="team-nav-arrow prev" onClick={teamPrev} aria-label="Previous team member">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="15 18 9 12 15 6" />
+                </svg>
+              </button>
+              <button type="button" className="team-nav-arrow next" onClick={teamNext} aria-label="Next team member">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="9 18 15 12 9 6" />
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <div className="team-category-tabs">
+            <button
+              className={`category-tab ${selectedCategory === 'Board of Directors' ? 'active' : ''}`}
+              onClick={() => handleCategoryChange('Board of Directors')}
+            >
+              Board of Directors
+            </button>
+            <button
+              className={`category-tab ${selectedCategory === 'Advisors' ? 'active' : ''}`}
+              onClick={() => handleCategoryChange('Advisors')}
+            >
+              Resource Pool
+            </button>
+          </div>
+
+          <div className="team-carousel-wrapper">
+            <div
+              className="team-grid"
+              style={{ transform: `translateX(-${teamIndex * 100}%)` }}
+            >
+              {getFilteredMembers().map((member, index) => (
+                <div
+                  key={member.id}
+                  className={`team-member ${index === teamIndex ? 'active' : ''}`}
+                  onClick={() => toggleMember(member.id)}
+                >
+                  <div className="team-member-image">
+                    <img src={member.image} alt={member.name} />
+                    <div className="team-member-overlay">
+                      <span className="view-details">View Details</span>
+                    </div>
+                  </div>
+                  <h3 className="team-member-name">{member.name}</h3>
+                  <p className="team-member-role">{member.role}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="team-dots">
+            {getFilteredMembers().map((_, index) => (
+              <button
+                key={index}
+                type="button"
+                className={`team-dot ${index === teamIndex ? 'active' : ''}`}
+                onClick={() => setTeamIndex(index)}
+                aria-label={`Go to team member ${index + 1}`}
+              />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* TEAM MODAL */}
+      <div
+        className={`team-member-modal ${activeMember !== null ? 'active' : ''}`}
         onClick={() => setActiveMember(null)}
       >
         <div className="team-modal-content" onClick={(e) => e.stopPropagation()}>
           <button className="modal-close-btn" onClick={() => setActiveMember(null)}>✕</button>
-          
           {activeMember !== null && (
             <>
               <div className="modal-image-wrapper">
                 <img src={teamMembers[activeMember].image} alt={teamMembers[activeMember].name} />
               </div>
               <div className="modal-body">
-                <h3 className="modal-name" style={{ 
-                  fontWeight: 'bold', 
-                  color: '#66588F',
-                  fontSize: '2.2rem',
-                  marginBottom: '2px',
-                  lineHeight: '1.2'
-                }}>
+                <h3 className="modal-name">
                   {teamMembers[activeMember].name}
                 </h3>
-                <p className="modal-role" style={{ 
-                  fontSize: '1.1rem',
-                  marginBottom: '8px',
-                  color: '#475569'
-                }}>
+                <p className="modal-role">
                   {teamMembers[activeMember].role}
                 </p>
-                <div className="modal-divider" style={{ marginBottom: '12px' }}></div>
-                
+                <div className="modal-divider"></div>
                 <div className="modal-bio">
                   <div className="bio-section">
-                    <h4 className="bio-heading" style={{
-                      fontSize: '1rem',
-                      fontWeight: '600',
-                      color: '#0f172a',
-                      marginBottom: '6px',
-                      letterSpacing: '0.02em'
-                    }}>
-                      Professional Bio
-                    </h4>
-                    <p className="bio-text" style={{
-                      fontSize: '0.95rem',
-                      lineHeight: '1.8',
-                      color: '#334155',
-                      margin: 0,
-                      textAlign: 'justify'
-                    }}>
+                    <h4 className="bio-heading">Professional Bio</h4>
+                    <p className="bio-text">
                       {teamMembers[activeMember].bio}
                     </p>
                   </div>
                 </div>
-                
-                <button 
-                  className="modal-download-btn" 
+                <button
+                  className="modal-download-btn"
                   onClick={(e) => {
                     e.stopPropagation();
                     window.open(teamMembers[activeMember].cv, '_blank');
-                  }}
-                  style={{
-                    marginTop: '16px',
-                    padding: '0.9rem 2rem',
-                    fontSize: '0.95rem',
-                    fontWeight: '600',
-                    color: '#ffffff',
-                    background: 'linear-gradient(135deg, #66588F 0%, #4a3f6b 100%)',
-                    border: 'none',
-                    borderRadius: '50px',
-                    cursor: 'pointer',
-                    width: '100%',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: '0.6rem',
-                    boxShadow: '0 6px 25px rgba(102, 88, 143, 0.2)',
-                    transition: 'all 0.3s ease'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.target.style.transform = 'scale(1.02)';
-                    e.target.style.boxShadow = '0 10px 35px rgba(102, 88, 143, 0.3)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.style.transform = 'scale(1)';
-                    e.target.style.boxShadow = '0 6px 25px rgba(102, 88, 143, 0.2)';
                   }}
                 >
                   📄 Download CV
@@ -1179,9 +1100,7 @@ function Home({ onNavigate, route }) {
         </div>
       </div>
 
-      {/* ============================================
-          NEWS & EVENTS SECTION
-          ============================================ */}
+      {/* NEWS & EVENTS */}
       <section className="news-section" id="news">
         <div className="news-container">
           <div className="news-header">
@@ -1190,7 +1109,6 @@ function Home({ onNavigate, route }) {
               <span className="news-title-line2">Events</span>
             </h2>
           </div>
-
           <div className="news-grid">
             {newsEvents.map((item) => (
               <div className="news-card" key={item.id}>
@@ -1204,10 +1122,7 @@ function Home({ onNavigate, route }) {
                   </div>
                   <h3 className="news-card-title">{item.title}</h3>
                   <p className="news-excerpt">{item.excerpt}</p>
-                  <button 
-                    className="news-read-more"
-                    onClick={() => handleNewsReadMore(item.newsId || item.id)}
-                  >
+                  <button className="news-read-more" onClick={() => handleNewsReadMore(item.newsId || item.id)}>
                     Read More <span className="news-arrow">→</span>
                   </button>
                 </div>
@@ -1217,9 +1132,7 @@ function Home({ onNavigate, route }) {
         </div>
       </section>
 
-      {/* ============================================
-          PUBLICATIONS SECTION
-          ============================================ */}
+      {/* PUBLICATIONS */}
       <section className="publications-section">
         <div className="publications-container">
           <div className="publications-header">
@@ -1228,7 +1141,6 @@ function Home({ onNavigate, route }) {
               <span className="publications-title-line2">Authored by Members of the Team</span>
             </h2>
           </div>
-
           <div className="publications-grid">
             <div className="publication-card">
               <div className="publication-image">
@@ -1253,250 +1165,184 @@ function Home({ onNavigate, route }) {
           </div>
         </div>
       </section>
-      
 
-{/* ============================================
-    CONTACT US SECTION
-    ============================================ */}
-<section className="contact-section" id="contact">
-  <div className="contact-container">
-    <div className="contact-header">
-      <h2 className="contact-title">
-        <span className="contact-title-line1">Get In</span>
-        <span className="contact-title-line2">Touch With Us</span>
-      </h2>
-    </div>
-
-    <div className="contact-grid">
-      {/* Left Side - Contact Information */}
-      <div className="contact-info">
-        <div className="contact-info-card">
-          <h3 className="contact-info-title">Contact Information</h3>
-          
-          {/* Contact Details - Compact */}
-          <div className="contact-info-item">
-            <div className="contact-info-icon">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-                <circle cx="12" cy="10" r="3"/>
-              </svg>
-            </div>
-            <div className="contact-info-text">
-              <h4>Address</h4>
-              <p>Plot 68-71, Road 4, Rupnagar Industrial Area, Section 2, Mirpur, Dhaka</p>
-            </div>
+      {/* CONTACT */}
+      <section className="contact-section" id="contact">
+        <div className="contact-container">
+          <div className="contact-header">
+            <h2 className="contact-title">
+              <span className="contact-title-line1">Get In</span>
+              <span className="contact-title-line2">Touch With Us</span>
+            </h2>
           </div>
+          <div className="contact-grid">
+            <div className="contact-info">
+              <div className="contact-info-card">
+                <h3 className="contact-info-title">Contact Information</h3>
+                <div className="contact-info-item">
+                  <div className="contact-info-icon">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                      <circle cx="12" cy="10" r="3"/>
+                    </svg>
+                  </div>
+                  <div className="contact-info-text">
+                    <h4>Address</h4>
+                    <p>Plot 68-71, Road 4, Rupnagar Industrial Area, Section 2, Mirpur, Dhaka</p>
+                  </div>
+                </div>
+                <div className="contact-info-item contact-info-row">
+                  <div className="contact-info-icon">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+                    </svg>
+                  </div>
+                  <div className="contact-info-text">
+                    <h4>Phone</h4>
+                    <p>+880 1712 988 982</p>
+                  </div>
+                </div>
+                <div className="contact-info-item contact-info-row">
+                  <div className="contact-info-icon">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                      <polyline points="22,6 12,13 2,6"/>
+                    </svg>
+                  </div>
+                  <div className="contact-info-text">
+                    <h4>Email</h4>
+                    <p> guneebd@gmail.com</p>
+                  </div>
+                </div>
+                <div className="contact-info-item">
+                  <div className="contact-info-icon">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <circle cx="12" cy="12" r="10"/>
+                      <polyline points="12 6 12 12 16 14"/>
+                    </svg>
+                  </div>
+                  <div className="contact-info-text">
+                    <h4>Working Hours</h4>
+                    <p>Sun - Thu: 9:00 AM - 6:00 PM</p>
+                  </div>
+                </div>
+                <div className="contact-social-links">
+                  <div className="contact-social-icons">
+                    <a href="#" className="contact-social-icon" aria-label="Facebook">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                      </svg>
+                    </a>
+                    <a href="#" className="contact-social-icon" aria-label="Twitter">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                      </svg>
+                    </a>
+                    <a href="#" className="contact-social-icon" aria-label="LinkedIn">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                      </svg>
+                    </a>
+                    <a href="#" className="contact-social-icon" aria-label="YouTube">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                      </svg>
+                    </a>
+                  </div>
+                </div>
+                <div className="contact-map-wrapper">
+                  <div className="contact-map-container">
+                    <iframe 
+                      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3650.199902152171!2d90.35549427353867!3d23.81148958643171!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3755c15fb6bce8d7%3A0x207f30ae9ebec5f3!2zQ29udmluY2UgR3JvdXAg4KaV4Kao4Kat4Ka_4Kao4KeN4Ka4IOCml-CnjeCmsOCngeCmqg!5e0!3m2!1sen!2sbd!4v1785236251024!5m2!1sen!2sbd" 
+                      width="100%" 
+                      height="140" 
+                      style={{ border: 0, borderRadius: '10px' }}
+                      allowFullScreen 
+                      loading="lazy" 
+                      referrerPolicy="no-referrer-when-downgrade"
+                      title="Gunee Bangladesh Office Location"
+                    ></iframe>
+                  </div>
+                  <div className="contact-map-actions">
+                    <a href="https://maps.google.com/maps?q=Plot+68-71,+Road+4,+Rupnagar+Industrial+Area,+Section+2,+Mirpur,+Dhaka" target="_blank" rel="noopener noreferrer" className="contact-map-btn">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                        <circle cx="12" cy="10" r="3"/>
+                      </svg>
+                      <span>Directions</span>
+                    </a>
+                    <a href="https://www.google.com/maps/place/Plot+68-71,+Road+4,+Rupnagar+Industrial+Area,+Section+2,+Mirpur,+Dhaka" target="_blank" rel="noopener noreferrer" className="contact-map-btn">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <polyline points="15 3 21 3 21 9"/>
+                        <polyline points="9 21 3 21 3 15"/>
+                        <line x1="21" y1="3" x2="14" y2="10"/>
+                        <line x1="3" y1="21" x2="10" y2="14"/>
+                      </svg>
+                      <span>Open Maps</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
 
-          <div className="contact-info-item contact-info-row">
-            <div className="contact-info-icon">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
-              </svg>
-            </div>
-            <div className="contact-info-text">
-              <h4>Phone</h4>
-              <p>+880 1712 988 982</p>
-            </div>
-          </div>
-
-          <div className="contact-info-item contact-info-row">
-            <div className="contact-info-icon">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-                <polyline points="22,6 12,13 2,6"/>
-              </svg>
-            </div>
-            <div className="contact-info-text">
-              <h4>Email</h4>
-              <p> guneebd@gmail.com</p>
-            </div>
-          </div>
-
-          <div className="contact-info-item">
-            <div className="contact-info-icon">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="12" cy="12" r="10"/>
-                <polyline points="12 6 12 12 16 14"/>
-              </svg>
-            </div>
-            <div className="contact-info-text">
-              <h4>Working Hours</h4>
-              <p>Sun - Thu: 9:00 AM - 6:00 PM</p>
-            </div>
-          </div>
-
-          <div className="contact-social-links">
-            <div className="contact-social-icons">
-              <a href="#" className="contact-social-icon" aria-label="Facebook">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-                </svg>
-              </a>
-              <a href="#" className="contact-social-icon" aria-label="Twitter">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-                </svg>
-              </a>
-              <a href="#" className="contact-social-icon" aria-label="LinkedIn">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-                </svg>
-              </a>
-              <a href="#" className="contact-social-icon" aria-label="YouTube">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
-                </svg>
-              </a>
-            </div>
-          </div>
-
-          {/* Google Map - Below Contact Information */}
-          <div className="contact-map-wrapper">
-            <div className="contact-map-container">
-              <iframe 
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3650.199902152171!2d90.35549427353867!3d23.81148958643171!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3755c15fb6bce8d7%3A0x207f30ae9ebec5f3!2zQ29udmluY2UgR3JvdXAg4KaV4Kao4Kat4Ka_4Kao4KeN4Ka4IOCml-CnjeCmsOCngeCmqg!5e0!3m2!1sen!2sbd!4v1785236251024!5m2!1sen!2sbd" 
-                width="100%" 
-                height="140" 
-                style={{ border: 0, borderRadius: '10px' }}
-                allowFullScreen 
-                loading="lazy" 
-                referrerPolicy="no-referrer-when-downgrade"
-                title="Gunee Bangladesh Office Location"
-              ></iframe>
-            </div>
-            <div className="contact-map-actions">
-              <a 
-                href="https://maps.google.com/maps?q=Plot+68-71,+Road+4,+Rupnagar+Industrial+Area,+Section+2,+Mirpur,+Dhaka" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="contact-map-btn"
-              >
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-                  <circle cx="12" cy="10" r="3"/>
-                </svg>
-                <span>Directions</span>
-              </a>
-              <a 
-                href="https://www.google.com/maps/place/Plot+68-71,+Road+4,+Rupnagar+Industrial+Area,+Section+2,+Mirpur,+Dhaka" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="contact-map-btn"
-              >
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <polyline points="15 3 21 3 21 9"/>
-                  <polyline points="9 21 3 21 3 15"/>
-                  <line x1="21" y1="3" x2="14" y2="10"/>
-                  <line x1="3" y1="21" x2="10" y2="14"/>
-                </svg>
-                <span>Open Maps</span>
-              </a>
+            <div className="contact-form-wrapper">
+              <div className="contact-form-card">
+                <h3 className="contact-form-title">Send Us a Message</h3>
+                <p className="contact-form-subtitle">Fill out the form below and we'll get back to you shortly.</p>
+                <form className="contact-form" onSubmit={(e) => e.preventDefault()}>
+                  <div className="contact-form-row">
+                    <div className="contact-form-group">
+                      <label htmlFor="fullName">Full Name <span className="required">*</span></label>
+                      <input type="text" id="fullName" placeholder="Enter your full name" className="contact-form-input" required />
+                    </div>
+                    <div className="contact-form-group">
+                      <label htmlFor="email">Email Address <span className="required">*</span></label>
+                      <input type="email" id="email" placeholder="Enter your email address" className="contact-form-input" required />
+                    </div>
+                  </div>
+                  <div className="contact-form-row">
+                    <div className="contact-form-group">
+                      <label htmlFor="phone">Phone Number</label>
+                      <input type="tel" id="phone" placeholder="Enter your phone number" className="contact-form-input" />
+                    </div>
+                    <div className="contact-form-group">
+                      <label htmlFor="subject">Subject <span className="required">*</span></label>
+                      <input type="text" id="subject" placeholder="Enter message subject" className="contact-form-input" required />
+                    </div>
+                  </div>
+                  <div className="contact-form-group">
+                    <label htmlFor="message">Message <span className="required">*</span></label>
+                    <textarea id="message" rows="3" placeholder="Type your message here..." className="contact-form-textarea" required></textarea>
+                  </div>
+                  <button type="submit" className="contact-form-submit">
+                    <span>Send Message</span>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <line x1="22" y1="2" x2="11" y2="13"/>
+                      <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                    </svg>
+                  </button>
+                </form>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Right Side - Contact Form */}
-      <div className="contact-form-wrapper">
-        <div className="contact-form-card">
-          <h3 className="contact-form-title">Send Us a Message</h3>
-          <p className="contact-form-subtitle">Fill out the form below and we'll get back to you shortly.</p>
-          
-          <form className="contact-form" onSubmit={(e) => e.preventDefault()}>
-            <div className="contact-form-row">
-              <div className="contact-form-group">
-                <label htmlFor="fullName">Full Name <span className="required">*</span></label>
-                <input 
-                  type="text" 
-                  id="fullName" 
-                  placeholder="Enter your full name"
-                  className="contact-form-input"
-                  required
-                />
-              </div>
-              <div className="contact-form-group">
-                <label htmlFor="email">Email Address <span className="required">*</span></label>
-                <input 
-                  type="email" 
-                  id="email" 
-                  placeholder="Enter your email address"
-                  className="contact-form-input"
-                  required
-                />
-              </div>
-            </div>
-
-            <div className="contact-form-row">
-              <div className="contact-form-group">
-                <label htmlFor="phone">Phone Number</label>
-                <input 
-                  type="tel" 
-                  id="phone" 
-                  placeholder="Enter your phone number"
-                  className="contact-form-input"
-                />
-              </div>
-              <div className="contact-form-group">
-                <label htmlFor="subject">Subject <span className="required">*</span></label>
-                <input 
-                  type="text" 
-                  id="subject" 
-                  placeholder="Enter message subject"
-                  className="contact-form-input"
-                  required
-                />
-              </div>
-            </div>
-
-            <div className="contact-form-group">
-              <label htmlFor="message">Message <span className="required">*</span></label>
-              <textarea 
-                id="message" 
-                rows="3" 
-                placeholder="Type your message here..."
-                className="contact-form-textarea"
-                required
-              ></textarea>
-            </div>
-
-            <button type="submit" className="contact-form-submit">
-              <span>Send Message</span>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <line x1="22" y1="2" x2="11" y2="13"/>
-                <polygon points="22 2 15 22 11 13 2 9 22 2"/>
-              </svg>
-            </button>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-      
-
-      {/* ============================================
-          FOOTER SECTION
-          ============================================ */}
+      {/* FOOTER */}
       <footer className="footer-section">
         <div className="footer-container">
           <div className="footer-content">
             <div className="footer-left">
               <div className="footer-brand">
-                <img 
-                  src="/images/logo.png" 
-                  alt="Gunee Bangladesh" 
-                  className="footer-logo" 
-                />
+                <img src="/images/logo.png" alt="Gunee Bangladesh" className="footer-logo" />
               </div>
             </div>
-
             <div className="footer-right">
               <div className="footer-address-row">
                 <p className="footer-address">
                   Address: Plot 68-71, Road 4, Rupnagar Industrial Area, Section 2, Mirpur, Dhaka, Bangladesh
                 </p>
               </div>
-
               <div className="footer-links-row">
                 <div className="footer-links">
                   <a href="#team" className="footer-link">Meet the Team</a>
@@ -1504,24 +1350,13 @@ function Home({ onNavigate, route }) {
                   <a href="#service" className="footer-link">Explore Our Services</a>
                 </div>
                 <div className="footer-social">
-                  <button 
-                    onClick={openGmail}
-                    className="footer-social-link" 
-                    aria-label="Email"
-                  >
-                    ✉️
-                  </button>
-                  <a href="#" className="footer-social-link" aria-label="LinkedIn">
-                    in
-                  </a>
-                  <a href="#" className="footer-social-link" aria-label="Instagram">
-                    📷
-                  </a>
+                  <button onClick={openGmail} className="footer-social-link" aria-label="Email">✉️</button>
+                  <a href="#" className="footer-social-link" aria-label="LinkedIn">in</a>
+                  <a href="#" className="footer-social-link" aria-label="Instagram">📷</a>
                 </div>
               </div>
             </div>
           </div>
-
           <div className="footer-copyright">
             <p>&copy; {new Date().getFullYear()} Gunee Bangladesh Limited. All rights reserved.</p>
           </div>
