@@ -16,6 +16,15 @@ function Home({ onNavigate, route }) {
   // Team carousel state
   const [teamIndex, setTeamIndex] = useState(0);
 
+  // ✅ Mission & Vision carousel state
+  const [missionIndex, setMissionIndex] = useState(0);
+
+  // ✅ News & Events carousel state
+  const [newsIndex, setNewsIndex] = useState(0);
+
+  // ✅ Publications carousel state
+  const [publicationIndex, setPublicationIndex] = useState(0);
+
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 10);
     onScroll();
@@ -29,7 +38,6 @@ function Home({ onNavigate, route }) {
       const originalOverflow = document.body.style.overflow;
       const originalPaddingRight = document.body.style.paddingRight;
 
-      // Prevent layout shift from scrollbar disappearing
       const scrollbarWidth =
         window.innerWidth - document.documentElement.clientWidth;
 
@@ -51,11 +59,6 @@ function Home({ onNavigate, route }) {
 
   const toggleService = (index) => {
     setActiveService(activeService === index ? null : index);
-  };
-
-  const handleDownloadCV = (cvPath, e) => {
-    e.stopPropagation();
-    window.open(cvPath, '_blank');
   };
 
   const openGmail = () => {
@@ -498,35 +501,43 @@ function Home({ onNavigate, route }) {
       title: <>Gender &amp; Social Equity</>,
       description: 'Promoting equality and social justice through inclusive policies and programs'
     },
-    {
-      img: '/images/money.png',
-      alt: 'Economics & Finance',
-      title: <>Economics &amp; Finance</>,
-      description: 'Driving economic growth and financial inclusion through strategic solutions'
-    },
-    {
-      img: '/images/ET.png',
-      alt: 'Engineering & Technology',
-      title: <>Engineering &amp; Technology</>,
-      description: 'Leveraging innovation and technical expertise for sustainable development'
-    },
-    {
+        {
       img: '/images/mc.png',
       alt: 'Media & Communication',
       title: <>Media &amp; Communication</>,
       description: 'Amplifying voices and shaping narratives through strategic communication'
     },
     {
+      img: '/images/money.png',
+      alt: 'Economics & Finance',
+      title: <>Economics &amp; Finance</>,
+      description: 'Driving economic growth and financial inclusion through strategic solutions'
+    },
+    
+    {
       img: '/images/environment.jpg',
       alt: 'Environment & Sustainability',
       title: <>Environment &amp; Sustainability</>,
       description: 'Building a greener future through environmental stewardship and sustainable practices'
+    },
+    {
+      img: '/images/ET.png',
+      alt: 'Engineering & Technology',
+      title: <>Engineering &amp; Technology</>,
+      description: 'Leveraging innovation and technical expertise for sustainable development'
     }
+
   ];
 
   const focusTotal = focusAreas.length;
   const focusPrev = () => setFocusIndex((i) => (i === 0 ? focusTotal - 1 : i - 1));
   const focusNext = () => setFocusIndex((i) => (i === focusTotal - 1 ? 0 : i + 1));
+
+  // ============================================
+  // MISSION & VISION CAROUSEL NAVIGATION
+  // ============================================
+  const missionPrev = () => setMissionIndex((i) => (i === 0 ? 1 : 0));
+  const missionNext = () => setMissionIndex((i) => (i === 1 ? 0 : 1));
 
   // ============================================
   // TEAM CAROUSEL — continuous with auto category switch
@@ -663,6 +674,30 @@ function Home({ onNavigate, route }) {
       newsId: 'inception-workshop'
     }
   ];
+
+  const publications = [
+    {
+      id: 0,
+      image: '/images/book111.png',
+      alt: 'Towards Inclusive Transformation',
+      title: 'Towards Inclusive Transformation: A study on gender gap in financial inclusion in Bangladesh'
+    },
+    {
+      id: 1,
+      image: '/images/book3.png',
+      alt: 'Women and Hijras in Bangladesh News Media',
+      title: 'Women and Hijras in Bangladesh News Media'
+    }
+  ];
+
+  // ✅ News & Publications Carousel Navigation
+  const newsTotal = newsEvents.length;
+  const newsPrev = () => setNewsIndex((i) => (i === 0 ? newsTotal - 1 : i - 1));
+  const newsNext = () => setNewsIndex((i) => (i === newsTotal - 1 ? 0 : i + 1));
+
+  const pubTotal = publications.length;
+  const publicationPrev = () => setPublicationIndex((i) => (i === 0 ? pubTotal - 1 : i - 1));
+  const publicationNext = () => setPublicationIndex((i) => (i === pubTotal - 1 ? 0 : i + 1));
 
   // ============================================
   // SHARE FUNCTIONS
@@ -878,7 +913,7 @@ function Home({ onNavigate, route }) {
         </div>
       </section>
 
-      {/* MISSION & VISION */}
+      {/* MISSION & VISION SECTION */}
       <section className="mission-vision-section">
         <div className="mission-vision-container">
           <div className="mission-vision-header">
@@ -886,20 +921,51 @@ function Home({ onNavigate, route }) {
               <span className="mission-vision-title-line1">Our</span>
               <span className="mission-vision-title-line2">Mission &amp; Vision</span>
             </h2>
+            <div className="mission-vision-header-arrows">
+              <button type="button" className="mission-nav-arrow prev" onClick={missionPrev} aria-label="Previous mission/vision card">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="15 18 9 12 15 6" />
+                </svg>
+              </button>
+              <button type="button" className="mission-nav-arrow next" onClick={missionNext} aria-label="Next mission/vision card">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="9 18 15 12 9 6" />
+                </svg>
+              </button>
+            </div>
           </div>
-          <div className="mission-vision-grid">
-            <div className="mission-vision-card mission-card">
-              <h3 className="mission-vision-card-title">🎯 Our Mission</h3>
-              <p className="mission-vision-card-text">
-                To drive transformative change in Bangladesh through evidence-based research, innovative training, and strategic consulting that promotes gender equity, financial inclusion, and sustainable development.
-              </p>
+
+          <div className="mission-vision-carousel-wrapper">
+            <div className="mission-vision-grid" style={{ transform: `translateX(-${missionIndex * 100}%)` }}>
+              <div className={`mission-vision-card mission-card ${missionIndex === 0 ? 'active' : ''}`}>
+                <h3 className="mission-vision-card-title">🎯 Our Mission</h3>
+                <p className="mission-vision-card-text">
+                  To drive transformative change in Bangladesh through evidence-based research,
+                  innovative training, and strategic consulting that promotes gender equity,
+                  financial inclusion, and sustainable development.
+                </p>
+              </div>
+              <div className={`mission-vision-card vision-card ${missionIndex === 1 ? 'active' : ''}`}>
+                <h3 className="mission-vision-card-title">💡 Our Vision</h3>
+                <p className="mission-vision-card-text">
+                  A Bangladesh where every individual, regardless of gender or background,
+                  has equal access to economic opportunities, financial services, and
+                  the tools needed to build a prosperous and sustainable future.
+                </p>
+              </div>
             </div>
-            <div className="mission-vision-card vision-card">
-              <h3 className="mission-vision-card-title">💡 Our Vision</h3>
-              <p className="mission-vision-card-text">
-                A Bangladesh where every individual, regardless of gender or background, has equal access to economic opportunities, financial services, and the tools needed to build a prosperous and sustainable future.
-              </p>
-            </div>
+          </div>
+
+          <div className="mission-vision-dots">
+            {[0, 1].map((index) => (
+              <button
+                key={index}
+                type="button"
+                className={`mission-vision-dot ${index === missionIndex ? 'active' : ''}`}
+                onClick={() => setMissionIndex(index)}
+                aria-label={`Go to card ${index + 1}`}
+              />
+            ))}
           </div>
         </div>
       </section>
@@ -984,7 +1050,6 @@ function Home({ onNavigate, route }) {
       {/* TEAM SECTION */}
       <section className="team-section" id="team">
         <div className="team-container">
-
           <div className="team-header-row">
             <h2 className="team-title">
               <span className="team-title-line1">Meet</span>
@@ -1020,10 +1085,7 @@ function Home({ onNavigate, route }) {
           </div>
 
           <div className="team-carousel-wrapper">
-            <div
-              className="team-grid"
-              style={{ transform: `translateX(-${teamIndex * 100}%)` }}
-            >
+            <div className="team-grid" style={{ transform: `translateX(-${teamIndex * 100}%)` }}>
               {getFilteredMembers().map((member, index) => (
                 <div
                   key={member.id}
@@ -1070,19 +1132,13 @@ function Home({ onNavigate, route }) {
                 <img src={teamMembers[activeMember].image} alt={teamMembers[activeMember].name} />
               </div>
               <div className="modal-body">
-                <h3 className="modal-name">
-                  {teamMembers[activeMember].name}
-                </h3>
-                <p className="modal-role">
-                  {teamMembers[activeMember].role}
-                </p>
+                <h3 className="modal-name">{teamMembers[activeMember].name}</h3>
+                <p className="modal-role">{teamMembers[activeMember].role}</p>
                 <div className="modal-divider"></div>
                 <div className="modal-bio">
                   <div className="bio-section">
                     <h4 className="bio-heading">Professional Bio</h4>
-                    <p className="bio-text">
-                      {teamMembers[activeMember].bio}
-                    </p>
+                    <p className="bio-text">{teamMembers[activeMember].bio}</p>
                   </div>
                 </div>
                 <button
@@ -1100,68 +1156,114 @@ function Home({ onNavigate, route }) {
         </div>
       </div>
 
-      {/* NEWS & EVENTS */}
+      {/* NEWS & EVENTS (Now with Carousel) */}
       <section className="news-section" id="news">
         <div className="news-container">
-          <div className="news-header">
+          <div className="news-header-row">
             <h2 className="news-title">
               <span className="news-title-line1">News &amp;</span>
               <span className="news-title-line2">Events</span>
             </h2>
+            <div className="news-header-arrows">
+              <button type="button" className="news-nav-arrow prev" onClick={newsPrev} aria-label="Previous news">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="15 18 9 12 15 6" />
+                </svg>
+              </button>
+              <button type="button" className="news-nav-arrow next" onClick={newsNext} aria-label="Next news">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="9 18 15 12 9 6" />
+                </svg>
+              </button>
+            </div>
           </div>
-          <div className="news-grid">
-            {newsEvents.map((item) => (
-              <div className="news-card" key={item.id}>
-                <div className="news-image-wrapper">
-                  <img src={item.image} alt={item.title} className="news-image" />
-                  <span className="news-category">{item.category}</span>
-                </div>
-                <div className="news-content">
-                  <div className="news-meta">
-                    <span className="news-date">{item.date}</span>
+
+          <div className="news-carousel-wrapper">
+            <div className="news-grid" style={{ transform: `translateX(-${newsIndex * 100}%)` }}>
+              {newsEvents.map((item, index) => (
+                <div className={`news-card ${index === newsIndex ? 'active' : ''}`} key={item.id}>
+                  <div className="news-image-wrapper">
+                    <img src={item.image} alt={item.title} className="news-image" />
+                    <span className="news-category">{item.category}</span>
                   </div>
-                  <h3 className="news-card-title">{item.title}</h3>
-                  <p className="news-excerpt">{item.excerpt}</p>
-                  <button className="news-read-more" onClick={() => handleNewsReadMore(item.newsId || item.id)}>
-                    Read More <span className="news-arrow">→</span>
-                  </button>
+                  <div className="news-content">
+                    <div className="news-meta">
+                      <span className="news-date">{item.date}</span>
+                    </div>
+                    <h3 className="news-card-title">{item.title}</h3>
+                    <p className="news-excerpt">{item.excerpt}</p>
+                    <button className="news-read-more" onClick={() => handleNewsReadMore(item.newsId || item.id)}>
+                      Read More <span className="news-arrow">→</span>
+                    </button>
+                  </div>
                 </div>
-              </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="news-dots">
+            {newsEvents.map((_, index) => (
+              <button
+                key={index}
+                type="button"
+                className={`news-dot ${index === newsIndex ? 'active' : ''}`}
+                onClick={() => setNewsIndex(index)}
+                aria-label={`Go to news ${index + 1}`}
+              />
             ))}
           </div>
         </div>
       </section>
 
-      {/* PUBLICATIONS */}
+      {/* PUBLICATIONS (Now with Carousel) */}
       <section className="publications-section">
         <div className="publications-container">
-          <div className="publications-header">
+          <div className="publications-header-row">
             <h2 className="publications-title">
               <span className="publications-title-line1">Recent Publications</span>
               <span className="publications-title-line2">Authored by Members of the Team</span>
             </h2>
+            <div className="publications-header-arrows">
+              <button type="button" className="publications-nav-arrow prev" onClick={publicationPrev} aria-label="Previous publication">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="15 18 9 12 15 6" />
+                </svg>
+              </button>
+              <button type="button" className="publications-nav-arrow next" onClick={publicationNext} aria-label="Next publication">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="9 18 15 12 9 6" />
+                </svg>
+              </button>
+            </div>
           </div>
-          <div className="publications-grid">
-            <div className="publication-card">
-              <div className="publication-image">
-                <img src="/images/book111.png" alt="Towards Inclusive Transformation" />
-              </div>
-              <div className="publication-content">
-                <h3 className="publication-title">
-                  Towards Inclusive Transformation: A study on gender gap in financial inclusion in Bangladesh
-                </h3>
-              </div>
+
+          <div className="publications-carousel-wrapper">
+            <div className="publications-grid" style={{ transform: `translateX(-${publicationIndex * 100}%)` }}>
+              {publications.map((pub, index) => (
+                <div className={`publication-card ${index === publicationIndex ? 'active' : ''}`} key={pub.id}>
+                  <div className="publication-image">
+                    <img src={pub.image} alt={pub.alt} />
+                  </div>
+                  <div className="publication-content">
+                    <h3 className="publication-title">
+                      {pub.title}
+                    </h3>
+                  </div>
+                </div>
+              ))}
             </div>
-            <div className="publication-card">
-              <div className="publication-image">
-                <img src="/images/book3.png" alt="Women and Hijras in Bangladesh News Media" />
-              </div>
-              <div className="publication-content">
-                <h3 className="publication-title">
-                  Women and Hijras in Bangladesh News Media
-                </h3>
-              </div>
-            </div>
+          </div>
+
+          <div className="publications-dots">
+            {publications.map((_, index) => (
+              <button
+                key={index}
+                type="button"
+                className={`publications-dot ${index === publicationIndex ? 'active' : ''}`}
+                onClick={() => setPublicationIndex(index)}
+                aria-label={`Go to publication ${index + 1}`}
+              />
+            ))}
           </div>
         </div>
       </section>
