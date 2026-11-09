@@ -522,7 +522,7 @@ function Home({ onNavigate, route }) {
     },
     {
       img: '/images/ET.png',
-      alt: 'Engineering & Technology',
+      alt: 'Engineering  Technology',
       title: <>Engineering &amp; Technology</>,
       description: 'Leveraging innovation and technical expertise for sustainable development'
     }
